@@ -7,8 +7,8 @@ import (
 	"image/jpeg"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/hectorgimenez/koolo/internal/config"
-	"github.com/hectorgimenez/koolo/internal/event"
+	"github.com/hectorgimenez/d2rbot/internal/config"
+	"github.com/hectorgimenez/d2rbot/internal/event"
 )
 
 func (b *Bot) Handle(_ context.Context, e event.Event) error {
@@ -48,21 +48,21 @@ func (b *Bot) shouldPublish(e event.Event) bool {
 	switch evt := e.(type) {
 	case event.GameFinishedEvent:
 		if evt.Reason == event.FinishedError {
-			return config.Koolo.Discord.EnableDiscordErrorMessages
+			return config.D2RBot.Discord.EnableDiscordErrorMessages
 		}
 		if evt.Reason == event.FinishedChicken || evt.Reason == event.FinishedMercChicken || evt.Reason == event.FinishedDied {
-			return config.Koolo.Discord.EnableDiscordChickenMessages
+			return config.D2RBot.Discord.EnableDiscordChickenMessages
 		}
 		if evt.Reason == event.FinishedOK {
 			return false // supress game finished messages until we add proper option for it
 		}
 		return true
 	case event.GameCreatedEvent:
-		return config.Koolo.Discord.EnableGameCreatedMessages
+		return config.D2RBot.Discord.EnableGameCreatedMessages
 	case event.RunStartedEvent:
-		return config.Koolo.Discord.EnableNewRunMessages
+		return config.D2RBot.Discord.EnableNewRunMessages
 	case event.RunFinishedEvent:
-		return config.Koolo.Discord.EnableRunFinishMessages
+		return config.D2RBot.Discord.EnableRunFinishMessages
 	default:
 		break
 	}

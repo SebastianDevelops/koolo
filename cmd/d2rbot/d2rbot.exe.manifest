@@ -3,10 +3,10 @@
 <assemblyIdentity
     version="0.0.4.0"
     processorArchitecture="amd64"
-    name="koolo.exe"
+    name="d2rbot.exe"
     type="win32"
 />
-<description>Koolo</description>
+<description>D2RBot</description>
 <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
     <security>
         <requestedPrivileges>

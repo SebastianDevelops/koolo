@@ -6,8 +6,8 @@ import (
 	"sort"
 	"time"
 
-	"github.com/hectorgimenez/koolo/internal/action/step"
-	"github.com/hectorgimenez/koolo/internal/game"
+	"github.com/hectorgimenez/d2rbot/internal/action/step"
+	"github.com/hectorgimenez/d2rbot/internal/game"
 
 	"github.com/hectorgimenez/d2go/pkg/data"
 	"github.com/hectorgimenez/d2go/pkg/data/npc"

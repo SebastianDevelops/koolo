@@ -8,16 +8,16 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/hectorgimenez/koolo/cmd/koolo/log"
-	"github.com/hectorgimenez/koolo/internal/character"
-	"github.com/hectorgimenez/koolo/internal/config"
-	"github.com/hectorgimenez/koolo/internal/context"
-	"github.com/hectorgimenez/koolo/internal/event"
-	"github.com/hectorgimenez/koolo/internal/game"
-	"github.com/hectorgimenez/koolo/internal/health"
-	"github.com/hectorgimenez/koolo/internal/pather"
-	"github.com/hectorgimenez/koolo/internal/utils"
-	"github.com/hectorgimenez/koolo/internal/utils/winproc"
+	"github.com/hectorgimenez/d2rbot/cmd/d2rbot/log"
+	"github.com/hectorgimenez/d2rbot/internal/character"
+	"github.com/hectorgimenez/d2rbot/internal/config"
+	"github.com/hectorgimenez/d2rbot/internal/context"
+	"github.com/hectorgimenez/d2rbot/internal/event"
+	"github.com/hectorgimenez/d2rbot/internal/game"
+	"github.com/hectorgimenez/d2rbot/internal/health"
+	"github.com/hectorgimenez/d2rbot/internal/pather"
+	"github.com/hectorgimenez/d2rbot/internal/utils"
+	"github.com/hectorgimenez/d2rbot/internal/utils/winproc"
 	"github.com/lxn/win"
 )
 
@@ -61,7 +61,7 @@ func (mng *SupervisorManager) Start(supervisorName string, attachToExisting bool
 		return fmt.Errorf("error loading config: %w", err)
 	}
 
-	supervisorLogger, err := log.NewLogger(config.Koolo.Debug.Log, config.Koolo.LogSaveDirectory, supervisorName)
+	supervisorLogger, err := log.NewLogger(config.D2RBot.Debug.Log, config.D2RBot.LogSaveDirectory, supervisorName)
 	if err != nil {
 		return err
 	}
@@ -91,7 +91,7 @@ func (mng *SupervisorManager) Start(supervisorName string, attachToExisting bool
 	mng.supervisors[supervisorName] = supervisor
 	mng.crashDetectors[supervisorName] = crashDetector
 
-	if config.Koolo.GameWindowArrangement {
+	if config.D2RBot.GameWindowArrangement {
 		go func() {
 			// When the game starts, its doing some weird stuff like repositioning and resizing window automatically
 			// we need to wait until this is done in order to reposition, or it will be overridden
@@ -220,7 +220,7 @@ func (mng *SupervisorManager) buildSupervisor(supervisorName string, logger *slo
 		}
 	} else {
 		var err error
-		pid, hwnd, err = game.StartGame(cfg.Username, cfg.Password, cfg.AuthMethod, cfg.AuthToken, cfg.Realm, cfg.CommandLineArgs, config.Koolo.UseCustomSettings)
+		pid, hwnd, err = game.StartGame(cfg.Username, cfg.Password, cfg.AuthMethod, cfg.AuthToken, cfg.Realm, cfg.CommandLineArgs, config.D2RBot.UseCustomSettings)
 		if err != nil {
 			return nil, nil, fmt.Errorf("error starting game: %w", err)
 		}

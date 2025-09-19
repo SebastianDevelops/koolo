@@ -4,7 +4,7 @@ import (
 	"image"
 	"unsafe"
 
-	"github.com/hectorgimenez/koolo/internal/utils/winproc"
+	"github.com/hectorgimenez/d2rbot/internal/utils/winproc"
 )
 
 func (gd *MemoryReader) Screenshot() image.Image {

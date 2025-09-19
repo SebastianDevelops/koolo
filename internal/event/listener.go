@@ -9,8 +9,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/hectorgimenez/koolo/internal/config"
-	"github.com/hectorgimenez/koolo/internal/utils"
+	"github.com/hectorgimenez/d2rbot/internal/config"
+	"github.com/hectorgimenez/d2rbot/internal/utils"
 )
 
 var events = make(chan Event)
@@ -45,7 +45,7 @@ func (l *Listener) Listen(ctx context.Context) error {
 				}
 			}
 
-			if e.Image() != nil && config.Koolo.Debug.Screenshots {
+			if e.Image() != nil && config.D2RBot.Debug.Screenshots {
 				fileName := fmt.Sprintf("screenshots/error-%s.jpeg", time.Now().Format("2006-01-02 15_04_05"))
 				err := utils.SaveImageJPEG(e.Image(), fileName)
 				if err != nil {

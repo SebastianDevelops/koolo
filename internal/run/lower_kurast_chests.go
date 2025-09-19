@@ -8,11 +8,11 @@ import (
 	"github.com/hectorgimenez/d2go/pkg/data"
 	"github.com/hectorgimenez/d2go/pkg/data/area"
 	"github.com/hectorgimenez/d2go/pkg/data/object"
-	"github.com/hectorgimenez/koolo/internal/action"
-	"github.com/hectorgimenez/koolo/internal/config"
-	"github.com/hectorgimenez/koolo/internal/context"
-	"github.com/hectorgimenez/koolo/internal/pather"
-	"github.com/hectorgimenez/koolo/internal/utils"
+	"github.com/hectorgimenez/d2rbot/internal/action"
+	"github.com/hectorgimenez/d2rbot/internal/config"
+	"github.com/hectorgimenez/d2rbot/internal/context"
+	"github.com/hectorgimenez/d2rbot/internal/pather"
+	"github.com/hectorgimenez/d2rbot/internal/utils"
 )
 
 var minChestDistanceFromBonfire = 25
@@ -113,19 +113,17 @@ func (run LowerKurastChests) Run() error {
 		return err
 	}
 
+	_, isLevelingChar := run.ctx.Char.(context.LevelingCharacter)
 
-    _, isLevelingChar := run.ctx.Char.(context.LevelingCharacter)
+	if !isLevelingChar {
 
-    if !isLevelingChar {
+		// Move to A4 if possible to shorten the run time
+		err = action.WayPoint(area.ThePandemoniumFortress)
+		if err != nil {
+			return err
+		}
 
-	// Move to A4 if possible to shorten the run time
-	err = action.WayPoint(area.ThePandemoniumFortress)
-	if err != nil {
-		return err
 	}
-   
-   
-    }
 
 	// Done
 	return nil

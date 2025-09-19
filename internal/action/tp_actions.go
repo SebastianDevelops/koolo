@@ -8,11 +8,11 @@ import (
 
 	"github.com/hectorgimenez/d2go/pkg/data"
 	"github.com/hectorgimenez/d2go/pkg/data/object"
-	"github.com/hectorgimenez/koolo/internal/action/step"
-	"github.com/hectorgimenez/koolo/internal/context"
-	"github.com/hectorgimenez/koolo/internal/health"
-	"github.com/hectorgimenez/koolo/internal/town"
-	"github.com/hectorgimenez/koolo/internal/utils"
+	"github.com/hectorgimenez/d2rbot/internal/action/step"
+	"github.com/hectorgimenez/d2rbot/internal/context"
+	"github.com/hectorgimenez/d2rbot/internal/health"
+	"github.com/hectorgimenez/d2rbot/internal/town"
+	"github.com/hectorgimenez/d2rbot/internal/utils"
 )
 
 func checkPlayerDeathForTP(ctx *context.Status) error {

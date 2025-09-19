@@ -2,8 +2,8 @@ package action
 
 import (
 	"github.com/hectorgimenez/d2go/pkg/data/npc"
-	botCtx "github.com/hectorgimenez/koolo/internal/context" // ALIAS THIS IMPORT
-	"github.com/hectorgimenez/koolo/internal/town"
+	botCtx "github.com/hectorgimenez/d2rbot/internal/context" // ALIAS THIS IMPORT
+	"github.com/hectorgimenez/d2rbot/internal/town"
 	"github.com/lxn/win"
 	"github.com/hectorgimenez/d2go/pkg/data/item"
 	"github.com/hectorgimenez/d2go/pkg/data/stat"

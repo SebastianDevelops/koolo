@@ -10,11 +10,11 @@ import (
 
 	"github.com/hectorgimenez/d2go/pkg/data"
 	"github.com/hectorgimenez/d2go/pkg/data/area"
-	"github.com/hectorgimenez/koolo/internal/config"
-	"github.com/hectorgimenez/koolo/internal/event"
-	"github.com/hectorgimenez/koolo/internal/game"
-	"github.com/hectorgimenez/koolo/internal/health"
-	"github.com/hectorgimenez/koolo/internal/pather"
+	"github.com/hectorgimenez/d2rbot/internal/config"
+	"github.com/hectorgimenez/d2rbot/internal/event"
+	"github.com/hectorgimenez/d2rbot/internal/game"
+	"github.com/hectorgimenez/d2rbot/internal/health"
+	"github.com/hectorgimenez/d2rbot/internal/pather"
 )
 
 var mu sync.Mutex

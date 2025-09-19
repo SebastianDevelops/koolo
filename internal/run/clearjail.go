@@ -1,14 +1,11 @@
 package run
 
 import (
-
-
 	"github.com/hectorgimenez/d2go/pkg/data"
 	"github.com/hectorgimenez/d2go/pkg/data/area"
-	"github.com/hectorgimenez/koolo/internal/action"
-	"github.com/hectorgimenez/koolo/internal/config"
-	"github.com/hectorgimenez/koolo/internal/context"
-
+	"github.com/hectorgimenez/d2rbot/internal/action"
+	"github.com/hectorgimenez/d2rbot/internal/config"
+	"github.com/hectorgimenez/d2rbot/internal/context"
 )
 
 type ClearJail struct {
@@ -32,10 +29,10 @@ func (t ClearJail) Run() error {
 	if err != nil {
 		return err
 	}
-	
+
 	return action.ClearCurrentLevel(false, data.MonsterAnyFilter())
 	//return action.ClearCurrentLevel(false, data.MonsterEliteFilter())
-	
+
 	//return action.ClearAreaAroundPlayer(250, data.MonsterEliteFilter())
 
 }

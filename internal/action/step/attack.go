@@ -11,8 +11,8 @@ import (
 	"github.com/hectorgimenez/d2go/pkg/data/skill"
 	"github.com/hectorgimenez/d2go/pkg/data/stat"
 	"github.com/hectorgimenez/d2go/pkg/utils"
-	"github.com/hectorgimenez/koolo/internal/context"
-	"github.com/hectorgimenez/koolo/internal/game"
+	"github.com/hectorgimenez/d2rbot/internal/context"
+	"github.com/hectorgimenez/d2rbot/internal/game"
 )
 
 const attackCycleDuration = 120 * time.Millisecond

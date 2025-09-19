@@ -4,8 +4,8 @@ import (
 	"context"
 	"log/slog"
 
-	"github.com/hectorgimenez/koolo/internal/config"
-	"github.com/hectorgimenez/koolo/internal/event"
+	"github.com/hectorgimenez/d2rbot/internal/config"
+	"github.com/hectorgimenez/d2rbot/internal/event"
 )
 
 // CompanionEventHandler handles events related to companion functionality

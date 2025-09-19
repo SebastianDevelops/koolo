@@ -3,10 +3,10 @@ package run
 import (
 	"github.com/hectorgimenez/d2go/pkg/data"
 	"github.com/hectorgimenez/d2go/pkg/data/area"
-	"github.com/hectorgimenez/koolo/internal/action"
-	"github.com/hectorgimenez/koolo/internal/character"
-	"github.com/hectorgimenez/koolo/internal/config"
-	"github.com/hectorgimenez/koolo/internal/context"
+	"github.com/hectorgimenez/d2rbot/internal/action"
+	"github.com/hectorgimenez/d2rbot/internal/character"
+	"github.com/hectorgimenez/d2rbot/internal/config"
+	"github.com/hectorgimenez/d2rbot/internal/context"
 )
 
 type Travincal struct {

@@ -1,30 +1,90 @@
+// Step Navigation System
+let currentStep = 1;
+const totalSteps = 6;
+
+function showStep(step) {
+    // Hide all step panes
+    document.querySelectorAll('.step-pane').forEach(pane => {
+        pane.classList.remove('active');
+    });
+    
+    // Show current step pane
+    const currentPane = document.getElementById(`step-${step}`);
+    if (currentPane) {
+        currentPane.classList.add('active');
+    }
+    
+    // Update step navigation
+    document.querySelectorAll('.step-item').forEach((item, index) => {
+        item.classList.remove('active', 'completed');
+        if (index + 1 === step) {
+            item.classList.add('active');
+        } else if (index + 1 < step) {
+            item.classList.add('completed');
+        }
+    });
+    
+    // Update buttons
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    if (prevBtn) prevBtn.style.display = step === 1 ? 'none' : 'inline-flex';
+    if (nextBtn) nextBtn.style.display = step === totalSteps ? 'none' : 'inline-flex';
+    if (submitBtn) submitBtn.style.display = step === totalSteps ? 'inline-flex' : 'none';
+}
+
+function changeStep(direction) {
+    const newStep = currentStep + direction;
+    if (newStep >= 1 && newStep <= totalSteps) {
+        currentStep = newStep;
+        showStep(currentStep);
+    }
+}
+
 window.onload = function () {
+    // Initialize step navigation
+    showStep(1);
+    
+    // Allow clicking on step navigation
+    document.querySelectorAll('.step-item').forEach((item, index) => {
+        item.addEventListener('click', () => {
+            currentStep = index + 1;
+            showStep(currentStep);
+        });
+    });
+    
+    // Initialize sortable runs (only if elements exist)
     let enabled_runs_ul = document.getElementById('enabled_runs');
     let disabled_runs_ul = document.getElementById('disabled_runs');
     let searchInput = document.getElementById('search-disabled-runs');
 
-    new Sortable(enabled_runs_ul, {
-        group: 'runs',
-        animation: 150,
-        onSort: function (evt) {
-            updateEnabledRunsHiddenField();
-        },
-        onAdd: function (evt) {
-            updateButtonForEnabledRun(evt.item);
-        }
-    });
+    if (enabled_runs_ul && disabled_runs_ul) {
+        new Sortable(enabled_runs_ul, {
+            group: 'runs',
+            animation: 150,
+            onSort: function (evt) {
+                updateEnabledRunsHiddenField();
+            },
+            onAdd: function (evt) {
+                updateButtonForEnabledRun(evt.item);
+            }
+        });
 
-    new Sortable(disabled_runs_ul, {
-        group: 'runs',
-        animation: 150,
-        onAdd: function (evt) {
-            updateButtonForDisabledRun(evt.item);
-        }
-    });
+        new Sortable(disabled_runs_ul, {
+            group: 'runs',
+            animation: 150,
+            onAdd: function (evt) {
+                updateButtonForDisabledRun(evt.item);
+            }
+        });
+    }
 
-    searchInput.addEventListener('input', function () {
-        filterDisabledRuns(searchInput.value);
-    });
+    if (searchInput) {
+        searchInput.addEventListener('input', function () {
+            filterDisabledRuns(searchInput.value);
+        });
+    }
 
     // Add event listeners for add and remove buttons
     document.addEventListener('click', function (e) {
@@ -39,24 +99,28 @@ window.onload = function () {
         }
     });
 
-    updateEnabledRunsHiddenField();
+    if (enabled_runs_ul) {
+        updateEnabledRunsHiddenField();
+    }
 
     const buildSelectElement = document.querySelector('select[name="characterClass"]');
-    buildSelectElement.addEventListener('change', function() {
-        const selectedBuild = buildSelectElement.value;
-        const levelingBuilds = ['paladin', 'sorceress_leveling'];
+    if (buildSelectElement) {
+        buildSelectElement.addEventListener('change', function() {
+            const selectedBuild = buildSelectElement.value;
+            const levelingBuilds = ['paladin', 'sorceress_leveling'];
 
-        const enabledRunListElement = document.getElementById('enabled_runs');
-        if (!enabledRunListElement) return;
+            const enabledRunListElement = document.getElementById('enabled_runs');
+            if (!enabledRunListElement) return;
 
-        const enabledRuns = Array.from(enabledRunListElement.querySelectorAll('li')).map(li => li.getAttribute('value'));
-        const isLevelingRunEnabled = enabledRuns.includes('leveling');
-        const hasOtherRunsEnabled = enabledRuns.length > 1;                  
+            const enabledRuns = Array.from(enabledRunListElement.querySelectorAll('li')).map(li => li.getAttribute('value'));
+            const isLevelingRunEnabled = enabledRuns.includes('leveling');
+            const hasOtherRunsEnabled = enabledRuns.length > 1;                  
 
-        if (levelingBuilds.includes(selectedBuild) && (!isLevelingRunEnabled || hasOtherRunsEnabled)) {
-            alert("This profile requires enabling the leveling run. Please add only the 'leveling' run to the enabled run list and remove the others.");
-        }
-    });
+            if (levelingBuilds.includes(selectedBuild) && (!isLevelingRunEnabled || hasOtherRunsEnabled)) {
+                alert("This profile requires enabling the leveling run. Please add only the 'leveling' run to the enabled run list and remove the others.");
+            }
+        });
+    }
 }
 
 function updateEnabledRunsHiddenField() {
@@ -129,6 +193,11 @@ function updateButtonForDisabledRun(runElement) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    // Initialize step navigation after DOM is loaded
+    if (typeof showStep === 'function') {
+        showStep(1);
+    }
+    
     const schedulerEnabled = document.querySelector('input[name="schedulerEnabled"]');
     const schedulerSettings = document.getElementById('scheduler-settings');
     const characterClassSelect = document.querySelector('select[name="characterClass"]');
@@ -147,7 +216,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function toggleSchedulerVisibility() {
-        schedulerSettings.style.display = schedulerEnabled.checked ? 'grid' : 'none';
+        if (schedulerSettings && schedulerEnabled) {
+            schedulerSettings.style.display = schedulerEnabled.checked ? 'block' : 'none';
+        }
     }
 
     function updateCharacterOptions() {
@@ -245,10 +316,14 @@ document.addEventListener('DOMContentLoaded', function () {
     updateCharacterOptions(); // Call this initially to set the correct state
 
     // Set initial state
-    toggleSchedulerVisibility();
-    updateNovaSorceressOptions();
-
-    schedulerEnabled.addEventListener('change', toggleSchedulerVisibility);
+    if (schedulerEnabled) {
+        toggleSchedulerVisibility();
+        schedulerEnabled.addEventListener('change', toggleSchedulerVisibility);
+    }
+    
+    if (characterClassSelect && (characterClassSelect.value === 'nova' || characterClassSelect.value === 'lightsorc')) {
+        updateNovaSorceressOptions();
+    }
 
     document.querySelectorAll('.add-time-range').forEach(button => {
         button.addEventListener('click', function () {

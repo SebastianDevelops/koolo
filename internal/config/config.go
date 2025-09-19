@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/hectorgimenez/d2go/pkg/data"
-	"github.com/hectorgimenez/koolo/internal/utils"
+	"github.com/hectorgimenez/d2rbot/internal/utils"
 
 	"os"
 	"strings"
@@ -24,12 +24,12 @@ import (
 )
 
 var (
-	Koolo      *KooloCfg
+	D2RBot     *D2RBotCfg
 	Characters map[string]*CharacterCfg
 	Version    = "dev"
 )
 
-type KooloCfg struct {
+type D2RBotCfg struct {
 	Debug struct {
 		Log         bool `yaml:"log"`
 		Screenshots bool `yaml:"screenshots"`
@@ -316,16 +316,16 @@ func Load() error {
 		return filepath.Join(cwd, relPath)
 	}
 
-	kooloPath := getAbsPath("config/koolo.yaml")
-	r, err := os.Open(kooloPath)
+	d2rbotPath := getAbsPath("config/d2rbot.yaml")
+	r, err := os.Open(d2rbotPath)
 	if err != nil {
-		return fmt.Errorf("error loading koolo.yaml: %w", err)
+		return fmt.Errorf("error loading d2rbot.yaml: %w", err)
 	}
 	defer r.Close()
 
 	d := yaml.NewDecoder(r)
-	if err = d.Decode(&Koolo); err != nil {
-		return fmt.Errorf("error reading config %s: %w", kooloPath, err)
+	if err = d.Decode(&D2RBot); err != nil {
+		return fmt.Errorf("error reading config %s: %w", d2rbotPath, err)
 	}
 
 	configDir := getAbsPath("config")
@@ -361,12 +361,12 @@ func Load() error {
 		}
 
 		var pickitPath string
-		if Koolo.CentralizedPickitPath != "" && charCfg.UseCentralizedPickit {
-			if _, err := os.Stat(Koolo.CentralizedPickitPath); os.IsNotExist(err) {
-				utils.ShowDialog("Error loading pickit rules for "+entry.Name(), "The centralized pickit path does not exist: "+Koolo.CentralizedPickitPath+"\nPlease check your Koolo settings.\nFalling back to local pickit.")
+		if D2RBot.CentralizedPickitPath != "" && charCfg.UseCentralizedPickit {
+			if _, err := os.Stat(D2RBot.CentralizedPickitPath); os.IsNotExist(err) {
+				utils.ShowDialog("Error loading pickit rules for "+entry.Name(), "The centralized pickit path does not exist: "+D2RBot.CentralizedPickitPath+"\nPlease check your D2RBot settings.\nFalling back to local pickit.")
 				pickitPath = getAbsPath(filepath.Join("config", entry.Name(), "pickit")) + "\\"
 			} else {
-				pickitPath = Koolo.CentralizedPickitPath + "\\"
+				pickitPath = D2RBot.CentralizedPickitPath + "\\"
 			}
 		} else {
 			pickitPath = getAbsPath(filepath.Join("config", entry.Name(), "pickit")) + "\\"
@@ -479,7 +479,7 @@ func CreateFromTemplate(name string) error {
 	return Load()
 }
 
-func ValidateAndSaveConfig(config KooloCfg) error {
+func ValidateAndSaveConfig(config D2RBotCfg) error {
 	config.D2LoDPath = strings.ReplaceAll(strings.ToLower(config.D2LoDPath), "game.exe", "")
 	config.D2RPath = strings.ReplaceAll(strings.ToLower(config.D2RPath), "d2r.exe", "")
 
@@ -493,12 +493,12 @@ func ValidateAndSaveConfig(config KooloCfg) error {
 
 	text, err := yaml.Marshal(config)
 	if err != nil {
-		return fmt.Errorf("error parsing koolo config: %w", err)
+		return fmt.Errorf("error parsing d2rbot config: %w", err)
 	}
 
-	err = os.WriteFile("config/koolo.yaml", text, 0644)
+	err = os.WriteFile("config/d2rbot.yaml", text, 0644)
 	if err != nil {
-		return fmt.Errorf("error writing koolo config: %w", err)
+		return fmt.Errorf("error writing d2rbot config: %w", err)
 	}
 
 	return Load()

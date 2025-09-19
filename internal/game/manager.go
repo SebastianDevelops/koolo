@@ -11,8 +11,8 @@ import (
 
 	"github.com/billgraziano/dpapi"
 	"github.com/hectorgimenez/d2go/pkg/data/difficulty"
-	"github.com/hectorgimenez/koolo/internal/config"
-	"github.com/hectorgimenez/koolo/internal/utils"
+	"github.com/hectorgimenez/d2rbot/internal/config"
+	"github.com/hectorgimenez/d2rbot/internal/utils"
 	"github.com/lxn/win"
 	"golang.org/x/sys/windows"
 	"golang.org/x/sys/windows/registry"
@@ -30,10 +30,10 @@ func NewGameManager(gr *MemoryReader, hid *HID, sueprvisorName string) *Manager 
 
 func (gm *Manager) ExitGame() error {
 
-	const maxAttempts = 50 
+	const maxAttempts = 50
 	for attempt := 0; attempt < maxAttempts; attempt++ {
 		if !gm.gr.InGame() {
-			return nil 
+			return nil
 		}
 
 		data := gm.gr.GetData()
@@ -242,7 +242,7 @@ func StartGame(username string, password string, authmethod string, authToken st
 
 	// Let's use the mod directory for storing the settings, so we stop overwriting the default config
 	if useCustomSettings {
-		modName := "koolo"
+		modName := "d2rbot"
 		found := false
 		for i, arg := range additionalArguments {
 			if arg == "-mod" {
@@ -255,8 +255,8 @@ func StartGame(username string, password string, authmethod string, authToken st
 			additionalArguments = append(additionalArguments, "-mod", modName)
 		}
 
-		// If there is no real mod, let's create a fake mod called "koolo" so we can store our own config
-		if modName == "koolo" {
+		// If there is no real mod, let's create a fake mod called "d2rbot" so we can store our own config
+		if modName == "d2rbot" {
 			err = config.InstallMod()
 			if err != nil {
 				return 0, 0, err
@@ -317,7 +317,7 @@ func StartGame(username string, password string, authmethod string, authToken st
 	}
 
 	// Start the game
-	cmd := exec.Command(config.Koolo.D2RPath+"\\D2R.exe", fullArgs...)
+	cmd := exec.Command(config.D2RBot.D2RPath+"\\D2R.exe", fullArgs...)
 	err = cmd.Start()
 	if err != nil {
 		return 0, 0, err

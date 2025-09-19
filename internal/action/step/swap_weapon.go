@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/hectorgimenez/d2go/pkg/data/skill"
-	"github.com/hectorgimenez/koolo/internal/context"
+	"github.com/hectorgimenez/d2rbot/internal/context"
 )
 
 func SwapToMainWeapon() error {

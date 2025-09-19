@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/hectorgimenez/d2go/pkg/data"
-	"github.com/hectorgimenez/koolo/internal/utils/winproc"
+	"github.com/hectorgimenez/d2rbot/internal/utils/winproc"
 	"github.com/lxn/win"
 )
 

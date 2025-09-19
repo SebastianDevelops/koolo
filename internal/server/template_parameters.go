@@ -2,8 +2,8 @@ package server
 
 import (
 	"github.com/hectorgimenez/d2go/pkg/data"
-	"github.com/hectorgimenez/koolo/internal/bot"
-	"github.com/hectorgimenez/koolo/internal/config"
+	"github.com/hectorgimenez/d2rbot/internal/bot"
+	"github.com/hectorgimenez/d2rbot/internal/config"
 )
 
 type IndexData struct {
@@ -20,20 +20,20 @@ type DropData struct {
 }
 
 type CharacterSettings struct {
-	ErrorMessage string
-	Supervisor   string
-	Config       *config.CharacterCfg
-	DayNames     []string
-	EnabledRuns  []string
-	DisabledRuns []string
-	AvailableTZs map[int]string
-	RecipeList   []string
+	ErrorMessage       string
+	Supervisor         string
+	Config             *config.CharacterCfg
+	DayNames           []string
+	EnabledRuns        []string
+	DisabledRuns       []string
+	AvailableTZs       map[int]string
+	RecipeList         []string
 	RunewordRecipeList []string
 }
 
 type ConfigData struct {
 	ErrorMessage string
-	*config.KooloCfg
+	*config.D2RBotCfg
 }
 
 type AutoSettings struct {

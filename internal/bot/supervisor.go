@@ -9,11 +9,11 @@ import (
 	"strings"
 	"time"
 
-	ct "github.com/hectorgimenez/koolo/internal/context"
-	"github.com/hectorgimenez/koolo/internal/event"
-	"github.com/hectorgimenez/koolo/internal/game"
-	"github.com/hectorgimenez/koolo/internal/run"
-	"github.com/hectorgimenez/koolo/internal/utils/winproc"
+	ct "github.com/hectorgimenez/d2rbot/internal/context"
+	"github.com/hectorgimenez/d2rbot/internal/event"
+	"github.com/hectorgimenez/d2rbot/internal/game"
+	"github.com/hectorgimenez/d2rbot/internal/run"
+	"github.com/hectorgimenez/d2rbot/internal/utils/winproc"
 	"github.com/lxn/win"
 )
 

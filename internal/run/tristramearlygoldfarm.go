@@ -4,12 +4,12 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/hectorgimenez/koolo/internal/utils"
 	"github.com/hectorgimenez/d2go/pkg/data"
 	"github.com/hectorgimenez/d2go/pkg/data/area"
 	"github.com/hectorgimenez/d2go/pkg/data/object"
-	"github.com/hectorgimenez/koolo/internal/action"
-	"github.com/hectorgimenez/koolo/internal/context"
+	"github.com/hectorgimenez/d2rbot/internal/action"
+	"github.com/hectorgimenez/d2rbot/internal/context"
+	"github.com/hectorgimenez/d2rbot/internal/utils"
 )
 
 // TristramEarlyGoldfarm is a struct that represents a new run for early gold farming in Tristram.
@@ -62,12 +62,11 @@ func (t *TristramEarlyGoldfarm) Run() error {
 	// Clear area around the portal
 	fmt.Println("TristramEarlyGoldfarm: Clearing area around the stone...")
 	action.ClearAreaAroundPlayer(40, data.MonsterAnyFilter())
-	
-	
+
 	t.ctx.RefreshGameData()
-	
+
 	utils.Sleep(500)
-	
+
 	action.ItemPickup(-1)
 	utils.Sleep(500)
 

@@ -3,9 +3,9 @@ package run
 import (
 	"github.com/hectorgimenez/d2go/pkg/data"
 	"github.com/hectorgimenez/d2go/pkg/data/area"
-	"github.com/hectorgimenez/koolo/internal/action"
-	"github.com/hectorgimenez/koolo/internal/config"
-	"github.com/hectorgimenez/koolo/internal/context"
+	"github.com/hectorgimenez/d2rbot/internal/action"
+	"github.com/hectorgimenez/d2rbot/internal/config"
+	"github.com/hectorgimenez/d2rbot/internal/context"
 )
 
 type TalRashaTombs struct {
@@ -46,9 +46,10 @@ func (a TalRashaTombs) Run() error {
 		// Buff before we start
 		action.Buff()
 
-								a.ctx.CharacterCfg.Character.ClearPathDist = 20
-	if err := config.SaveSupervisorConfig(a.ctx.CharacterCfg.ConfigFolderName, a.ctx.CharacterCfg); err != nil {
-		a.ctx.Logger.Error("Failed to save character configuration: %s", err.Error())}
+		a.ctx.CharacterCfg.Character.ClearPathDist = 20
+		if err := config.SaveSupervisorConfig(a.ctx.CharacterCfg.ConfigFolderName, a.ctx.CharacterCfg); err != nil {
+			a.ctx.Logger.Error("Failed to save character configuration: %s", err.Error())
+		}
 
 		// Clear the Tomb
 		if err = action.ClearCurrentLevel(true, data.MonsterAnyFilter()); err != nil {

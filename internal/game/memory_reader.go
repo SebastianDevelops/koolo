@@ -12,8 +12,8 @@ import (
 	"github.com/hectorgimenez/d2go/pkg/data/area"
 	"github.com/hectorgimenez/d2go/pkg/memory"
 	"github.com/hectorgimenez/d2go/pkg/utils"
-	"github.com/hectorgimenez/koolo/internal/config"
-	"github.com/hectorgimenez/koolo/internal/game/map_client"
+	"github.com/hectorgimenez/d2rbot/internal/config"
+	"github.com/hectorgimenez/d2rbot/internal/game/map_client"
 	"github.com/lxn/win"
 	"golang.org/x/sync/errgroup"
 )

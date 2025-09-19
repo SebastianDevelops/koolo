@@ -3,8 +3,8 @@ package action
 import (
 	"log/slog"
 
-	"github.com/hectorgimenez/koolo/internal/action/step"
-	"github.com/hectorgimenez/koolo/internal/context"
+	"github.com/hectorgimenez/d2rbot/internal/action/step"
+	"github.com/hectorgimenez/d2rbot/internal/context"
 )
 
 func DiscoverWaypoint() error {

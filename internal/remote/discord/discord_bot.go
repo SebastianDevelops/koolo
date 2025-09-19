@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/hectorgimenez/koolo/internal/bot"
-	"github.com/hectorgimenez/koolo/internal/config"
+	"github.com/hectorgimenez/d2rbot/internal/bot"
+	"github.com/hectorgimenez/d2rbot/internal/config"
 )
 
 type Bot struct {
@@ -51,7 +51,7 @@ func (b *Bot) onMessageCreated(s *discordgo.Session, m *discordgo.MessageCreate)
 	}
 
 	// Check if the message is from a bot admin
-	if !slices.Contains(config.Koolo.Discord.BotAdmins, m.Author.ID) {
+	if !slices.Contains(config.D2RBot.Discord.BotAdmins, m.Author.ID) {
 		return
 	}
 

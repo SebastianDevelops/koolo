@@ -13,9 +13,9 @@ import (
 	"github.com/hectorgimenez/d2go/pkg/data/skill"
 	"github.com/hectorgimenez/d2go/pkg/data/stat"
 	"github.com/hectorgimenez/d2go/pkg/nip"
-	"github.com/hectorgimenez/koolo/internal/action/step"
-	"github.com/hectorgimenez/koolo/internal/context"
-	"github.com/hectorgimenez/koolo/internal/event"
+	"github.com/hectorgimenez/d2rbot/internal/action/step"
+	"github.com/hectorgimenez/d2rbot/internal/context"
+	"github.com/hectorgimenez/d2rbot/internal/event"
 )
 
 func itemFitsInventory(i data.Item) bool {

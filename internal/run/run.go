@@ -1,7 +1,7 @@
 package run
 
 import (
-	"github.com/hectorgimenez/koolo/internal/config"
+	"github.com/hectorgimenez/d2rbot/internal/config"
 )
 
 type Run interface {

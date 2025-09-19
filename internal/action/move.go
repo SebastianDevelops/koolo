@@ -9,16 +9,16 @@ import (
 	"time"
 
 	"github.com/hectorgimenez/d2go/pkg/data/stat"
-	"github.com/hectorgimenez/koolo/internal/utils"
+	"github.com/hectorgimenez/d2rbot/internal/utils"
 
 	"github.com/hectorgimenez/d2go/pkg/data"
 	"github.com/hectorgimenez/d2go/pkg/data/area"
 	"github.com/hectorgimenez/d2go/pkg/data/object"
-	"github.com/hectorgimenez/koolo/internal/action/step"
-	"github.com/hectorgimenez/koolo/internal/context"
-	"github.com/hectorgimenez/koolo/internal/event"
-	"github.com/hectorgimenez/koolo/internal/game"
-	"github.com/hectorgimenez/koolo/internal/health"
+	"github.com/hectorgimenez/d2rbot/internal/action/step"
+	"github.com/hectorgimenez/d2rbot/internal/context"
+	"github.com/hectorgimenez/d2rbot/internal/event"
+	"github.com/hectorgimenez/d2rbot/internal/game"
+	"github.com/hectorgimenez/d2rbot/internal/health"
 )
 
 const (

@@ -13,8 +13,8 @@ import (
 	"github.com/hectorgimenez/d2go/pkg/data/object"
 	"github.com/hectorgimenez/d2go/pkg/data/quest"
 	"github.com/hectorgimenez/d2go/pkg/data/stat"
-	"github.com/hectorgimenez/koolo/internal/action"
-	"github.com/hectorgimenez/koolo/internal/utils"
+	"github.com/hectorgimenez/d2rbot/internal/action"
+	"github.com/hectorgimenez/d2rbot/internal/utils"
 	"github.com/lxn/win"
 )
 
@@ -204,4 +204,3 @@ func (a Leveling) OuterSteppes() error {
 
 	return nil
 }
-

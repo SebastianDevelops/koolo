@@ -1,4 +1,4 @@
-module github.com/hectorgimenez/koolo
+module github.com/hectorgimenez/d2rbot
 
 go 1.23
 

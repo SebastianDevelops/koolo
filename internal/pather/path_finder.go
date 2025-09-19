@@ -7,9 +7,9 @@ import (
 	"github.com/hectorgimenez/d2go/pkg/data"
 	"github.com/hectorgimenez/d2go/pkg/data/area"
 	"github.com/hectorgimenez/d2go/pkg/data/npc"
-	"github.com/hectorgimenez/koolo/internal/config"
-	"github.com/hectorgimenez/koolo/internal/game"
-	"github.com/hectorgimenez/koolo/internal/pather/astar"
+	"github.com/hectorgimenez/d2rbot/internal/config"
+	"github.com/hectorgimenez/d2rbot/internal/game"
+	"github.com/hectorgimenez/d2rbot/internal/pather/astar"
 )
 
 type PathFinder struct {
@@ -140,7 +140,7 @@ func (pf *PathFinder) GetPathFrom(from, to data.Position) (Path, int, bool) {
 	}
 	path, distance, found := astar.CalculatePath(grid, from, to)
 
-	if config.Koolo.Debug.RenderMap {
+	if config.D2RBot.Debug.RenderMap {
 		pf.renderMap(grid, from, to, path)
 	}
 

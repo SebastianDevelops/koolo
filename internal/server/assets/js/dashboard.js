@@ -41,11 +41,7 @@ let socket;
     function updateDashboard(data) {
         const versionElement = document.getElementById('version');
         if (versionElement) {
-            versionElement.textContent = data.Version;
-            if (data.Version === "dev") {
-                versionElement.textContent = "Development Version";
-                versionElement.style.backgroundColor = "#dc3545";
-            }
+            versionElement.textContent = "V1.0.0";
         }
 
         const container = document.getElementById('characters-container');
@@ -771,8 +767,158 @@ function updateButtons(startPauseBtn, stopBtn, attachBtn, status) {
         });
     }
 
+    // Tab navigation functionality
+    function initializeTabs() {
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetTab = button.getAttribute('data-tab');
+                
+                // Remove active class from all buttons and panes
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabPanes.forEach(pane => pane.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding pane
+                button.classList.add('active');
+                const targetPane = document.getElementById(targetTab + '-tab');
+                if (targetPane) {
+                    targetPane.classList.add('active');
+                }
+                
+                // Initialize logs tab if selected
+                if (targetTab === 'logs') {
+                    initializeLogsTab();
+                }
+                
+                // Store active tab in localStorage
+                localStorage.setItem('activeTab', targetTab);
+            });
+        });
+        
+        // Restore active tab from localStorage
+        const activeTab = localStorage.getItem('activeTab') || 'dashboard';
+        const activeButton = document.querySelector(`[data-tab="${activeTab}"]`);
+        const activePane = document.getElementById(activeTab + '-tab');
+        
+        if (activeButton && activePane) {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabPanes.forEach(pane => pane.classList.remove('active'));
+            activeButton.classList.add('active');
+            activePane.classList.add('active');
+            
+            // Initialize logs tab if it's the active tab
+            if (activeTab === 'logs') {
+                initializeLogsTab();
+            }
+        }
+    }
+
+    // Logs tab functionality
+    function initializeLogsTab() {
+        loadLogFiles();
+        setupLogControls();
+    }
+
+    function loadLogFiles() {
+        fetch('/api/log-files')
+            .then(response => response.json())
+            .then(files => {
+                const selector = document.getElementById('log-file-selector');
+                selector.innerHTML = '<option value="">Select a log file...</option>';
+                
+                files.forEach(file => {
+                    const option = document.createElement('option');
+                    option.value = file.name;
+                    option.textContent = `${file.name} (${file.size})`;
+                    selector.appendChild(option);
+                });
+                
+                // Auto-select the latest log file
+                if (files.length > 0) {
+                    selector.value = files[0].name;
+                    loadLogContent(files[0].name);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading log files:', error);
+                document.getElementById('log-content').innerHTML = 
+                    '<div class="log-placeholder">Error loading log files</div>';
+            });
+    }
+
+    function loadLogContent(filename) {
+        if (!filename) {
+            document.getElementById('log-content').innerHTML = 
+                '<div class="log-placeholder">Select a log file from the dropdown above to view its contents.</div>';
+            return;
+        }
+
+        fetch(`/api/log-content?file=${encodeURIComponent(filename)}`)
+            .then(response => response.text())
+            .then(content => {
+                const logContent = document.getElementById('log-content');
+                const lines = content.split('\n');
+                
+                logContent.innerHTML = lines.map(line => {
+                    if (!line.trim()) return '';
+                    
+                    let level = 'DEBUG';
+                    if (line.includes('level=ERROR')) level = 'ERROR';
+                    else if (line.includes('level=WARN')) level = 'WARN';
+                    else if (line.includes('level=INFO')) level = 'INFO';
+                    
+                    return `<div class="log-line level-${level}">${escapeHtml(line)}</div>`;
+                }).join('');
+                
+                // Auto-scroll to bottom if enabled
+                const autoScrollBtn = document.getElementById('auto-scroll-btn');
+                if (autoScrollBtn.dataset.enabled === 'true') {
+                    logContent.scrollTop = logContent.scrollHeight;
+                }
+            })
+            .catch(error => {
+                console.error('Error loading log content:', error);
+                document.getElementById('log-content').innerHTML = 
+                    '<div class="log-placeholder">Error loading log content</div>';
+            });
+    }
+
+    function setupLogControls() {
+        const selector = document.getElementById('log-file-selector');
+        const refreshBtn = document.getElementById('refresh-logs-btn');
+        const autoScrollBtn = document.getElementById('auto-scroll-btn');
+        
+        selector.addEventListener('change', (e) => {
+            loadLogContent(e.target.value);
+        });
+        
+        refreshBtn.addEventListener('click', () => {
+            loadLogFiles();
+        });
+        
+        autoScrollBtn.addEventListener('click', () => {
+            const enabled = autoScrollBtn.dataset.enabled === 'true';
+            autoScrollBtn.dataset.enabled = !enabled;
+            autoScrollBtn.classList.toggle('active', !enabled);
+            
+            if (!enabled) {
+                const logContent = document.getElementById('log-content');
+                logContent.scrollTop = logContent.scrollHeight;
+            }
+        });
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         fetchInitialData();
         connectWebSocket();
         restoreExpandedState();
+        initializeTabs();
     });

@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hectorgimenez/koolo/internal/action/step"
+	"github.com/hectorgimenez/d2rbot/internal/action/step"
 
-	"github.com/hectorgimenez/koolo/internal/game"
-	"github.com/hectorgimenez/koolo/internal/ui"
-	"github.com/hectorgimenez/koolo/internal/utils"
+	"github.com/hectorgimenez/d2rbot/internal/game"
+	"github.com/hectorgimenez/d2rbot/internal/ui"
+	"github.com/hectorgimenez/d2rbot/internal/utils"
 
 	"github.com/hectorgimenez/d2go/pkg/data"
 	"github.com/hectorgimenez/d2go/pkg/data/area"
@@ -17,8 +17,8 @@ import (
 	"github.com/hectorgimenez/d2go/pkg/data/object"
 	"github.com/hectorgimenez/d2go/pkg/data/quest"
 	"github.com/hectorgimenez/d2go/pkg/data/stat"
-	"github.com/hectorgimenez/koolo/internal/action"
-	"github.com/hectorgimenez/koolo/internal/config" // Make sure this import is present
+	"github.com/hectorgimenez/d2rbot/internal/action"
+	"github.com/hectorgimenez/d2rbot/internal/config" // Make sure this import is present
 	//	"github.com/lxn/win"
 )
 
@@ -255,5 +255,3 @@ func (a Leveling) CrystallinePassage() error {
 	return nil
 
 }
-
-

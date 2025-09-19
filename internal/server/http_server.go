@@ -11,6 +11,8 @@ import (
 	"io/fs"
 	"log/slog"
 	"net/http"
+	"os"
+	"path/filepath"
 	"slices"
 	"sort"
 	"strconv"
@@ -24,13 +26,13 @@ import (
 	"github.com/hectorgimenez/d2go/pkg/data/area"
 	"github.com/hectorgimenez/d2go/pkg/data/difficulty"
 	"github.com/hectorgimenez/d2go/pkg/data/stat"
-	"github.com/hectorgimenez/koolo/internal/bot"
-	"github.com/hectorgimenez/koolo/internal/config"
-	ctx "github.com/hectorgimenez/koolo/internal/context"
-	"github.com/hectorgimenez/koolo/internal/event"
-	"github.com/hectorgimenez/koolo/internal/game"
-	"github.com/hectorgimenez/koolo/internal/utils"
-	"github.com/hectorgimenez/koolo/internal/utils/winproc"
+	"github.com/hectorgimenez/d2rbot/internal/bot"
+	"github.com/hectorgimenez/d2rbot/internal/config"
+	ctx "github.com/hectorgimenez/d2rbot/internal/context"
+	"github.com/hectorgimenez/d2rbot/internal/event"
+	"github.com/hectorgimenez/d2rbot/internal/game"
+	"github.com/hectorgimenez/d2rbot/internal/utils"
+	"github.com/hectorgimenez/d2rbot/internal/utils/winproc"
 	"github.com/lxn/win"
 	"golang.org/x/sys/windows"
 )
@@ -437,6 +439,8 @@ func (s *HttpServer) Listen(port int) error {
 	http.HandleFunc("/initial-data", s.initialData)         // Web socket data
 	http.HandleFunc("/api/reload-config", s.reloadConfig)   // New handler
 	http.HandleFunc("/api/companion-join", s.companionJoin) // Companion join handler
+	http.HandleFunc("/api/log-files", s.getLogFiles)        // Log files list
+	http.HandleFunc("/api/log-content", s.getLogContent)    // Log file content
 
 	assets, _ := fs.Sub(assetsFS, "assets")
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.FS(assets))))
@@ -476,7 +480,7 @@ func (s *HttpServer) getRoot(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if config.Koolo.FirstRun {
+	if config.D2RBot.FirstRun {
 		http.Redirect(w, r, "/config", http.StatusSeeOther)
 		return
 	}
@@ -648,11 +652,11 @@ func (s *HttpServer) config(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		err := r.ParseForm()
 		if err != nil {
-			s.templates.ExecuteTemplate(w, "config.gohtml", ConfigData{KooloCfg: config.Koolo, ErrorMessage: "Error parsing form"})
+			s.templates.ExecuteTemplate(w, "config.gohtml", ConfigData{D2RBotCfg: config.D2RBot, ErrorMessage: "Error parsing form"})
 			return
 		}
 
-		newConfig := *config.Koolo
+		newConfig := *config.D2RBot
 		newConfig.FirstRun = false // Disable the welcome assistant
 		newConfig.D2RPath = r.Form.Get("d2rpath")
 		newConfig.D2LoDPath = r.Form.Get("d2lodpath")
@@ -662,38 +666,10 @@ func (s *HttpServer) config(w http.ResponseWriter, r *http.Request) {
 		// Debug
 		newConfig.Debug.Log = r.Form.Get("debug_log") == "true"
 		newConfig.Debug.Screenshots = r.Form.Get("debug_screenshots") == "true"
-		// Discord
-		newConfig.Discord.Enabled = r.Form.Get("discord_enabled") == "true"
-		newConfig.Discord.EnableGameCreatedMessages = r.Form.Has("enable_game_created_messages")
-		newConfig.Discord.EnableNewRunMessages = r.Form.Has("enable_new_run_messages")
-		newConfig.Discord.EnableRunFinishMessages = r.Form.Has("enable_run_finish_messages")
-		newConfig.Discord.EnableDiscordChickenMessages = r.Form.Has("enable_discord_chicken_messages")
-		newConfig.Discord.EnableDiscordErrorMessages = r.Form.Has("enable_discord_error_messages")
-
-		// Discord admins who can use bot commands
-		discordAdmins := r.Form.Get("discord_admins")
-		cleanedAdmins := strings.Map(func(r rune) rune {
-			if (r >= '0' && r <= '9') || r == ',' {
-				return r
-			}
-			return -1
-		}, discordAdmins)
-		newConfig.Discord.BotAdmins = strings.Split(cleanedAdmins, ",")
-		newConfig.Discord.Token = r.Form.Get("discord_token")
-		newConfig.Discord.ChannelID = r.Form.Get("discord_channel_id")
-		// Telegram
-		newConfig.Telegram.Enabled = r.Form.Get("telegram_enabled") == "true"
-		newConfig.Telegram.Token = r.Form.Get("telegram_token")
-		telegramChatId, err := strconv.ParseInt(r.Form.Get("telegram_chat_id"), 10, 64)
-		if err != nil {
-			s.templates.ExecuteTemplate(w, "config.gohtml", ConfigData{KooloCfg: &newConfig, ErrorMessage: "Invalid Telegram Chat ID"})
-			return
-		}
-		newConfig.Telegram.ChatID = telegramChatId
 
 		err = config.ValidateAndSaveConfig(newConfig)
 		if err != nil {
-			s.templates.ExecuteTemplate(w, "config.gohtml", ConfigData{KooloCfg: &newConfig, ErrorMessage: err.Error()})
+			s.templates.ExecuteTemplate(w, "config.gohtml", ConfigData{D2RBotCfg: &newConfig, ErrorMessage: err.Error()})
 			return
 		}
 
@@ -701,7 +677,7 @@ func (s *HttpServer) config(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.templates.ExecuteTemplate(w, "config.gohtml", ConfigData{KooloCfg: config.Koolo, ErrorMessage: ""})
+	s.templates.ExecuteTemplate(w, "config.gohtml", ConfigData{D2RBotCfg: config.D2RBot, ErrorMessage: ""})
 }
 
 func (s *HttpServer) characterSettings(w http.ResponseWriter, r *http.Request) {
@@ -1124,4 +1100,89 @@ func (s *HttpServer) companionJoin(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]bool{"success": true})
+}
+
+// LogFile represents a log file with metadata
+type LogFile struct {
+	Name string `json:"name"`
+	Size string `json:"size"`
+	ModTime time.Time `json:"modTime"`
+}
+
+// getLogFiles returns a list of available log files
+func (s *HttpServer) getLogFiles(w http.ResponseWriter, r *http.Request) {
+	logDir := "logs"
+	files, err := os.ReadDir(logDir)
+	if err != nil {
+		s.logger.Error("Failed to read logs directory", "error", err)
+		http.Error(w, "Failed to read logs directory", http.StatusInternalServerError)
+		return
+	}
+
+	var logFiles []LogFile
+	for _, file := range files {
+		if file.IsDir() || !strings.HasSuffix(file.Name(), ".txt") {
+			continue
+		}
+
+		info, err := file.Info()
+		if err != nil {
+			continue
+		}
+
+		size := formatFileSize(info.Size())
+		logFiles = append(logFiles, LogFile{
+			Name:    file.Name(),
+			Size:    size,
+			ModTime: info.ModTime(),
+		})
+	}
+
+	// Sort by modification time (newest first)
+	sort.Slice(logFiles, func(i, j int) bool {
+		return logFiles[i].ModTime.After(logFiles[j].ModTime)
+	})
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(logFiles)
+}
+
+// getLogContent returns the content of a specific log file
+func (s *HttpServer) getLogContent(w http.ResponseWriter, r *http.Request) {
+	filename := r.URL.Query().Get("file")
+	if filename == "" {
+		http.Error(w, "File parameter is required", http.StatusBadRequest)
+		return
+	}
+
+	// Security check: ensure filename doesn't contain path traversal
+	if strings.Contains(filename, "..") || strings.Contains(filename, "/") || strings.Contains(filename, "\\") {
+		http.Error(w, "Invalid filename", http.StatusBadRequest)
+		return
+	}
+
+	filePath := filepath.Join("logs", filename)
+	content, err := os.ReadFile(filePath)
+	if err != nil {
+		s.logger.Error("Failed to read log file", "file", filename, "error", err)
+		http.Error(w, "Failed to read log file", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Write(content)
+}
+
+// formatFileSize formats file size in human readable format
+func formatFileSize(size int64) string {
+	const unit = 1024
+	if size < unit {
+		return fmt.Sprintf("%d B", size)
+	}
+	div, exp := int64(unit), 0
+	for n := size / unit; n >= unit; n /= unit {
+		div *= unit
+		exp++
+	}
+	return fmt.Sprintf("%.1f %cB", float64(size)/float64(div), "KMGTPE"[exp])
 }

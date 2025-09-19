@@ -2,12 +2,12 @@
 setlocal enabledelayedexpansion
 
 :: Preserve UI and critical packages
-set GOGARBLE=!github.com/hectorgimenez/koolo/internal/server*,!github.com/hectorgimenez/koolo/internal/event*,!github.com/inkeliz/gowebview*
+set GOGARBLE=!github.com/hectorgimenez/d2rbot/internal/server*,!github.com/hectorgimenez/d2rbot/internal/event*,!github.com/inkeliz/gowebview*
 
 :: Change to the script's directory
 cd /d "%~dp0"
 
-call :print_header "Starting Koolo Build Process"
+call :print_header "Starting D2RBot Build Process"
 
 :: Check for Go installation
 call :check_go_installation
@@ -65,18 +65,18 @@ goto :eof
 call :validate_environment
 if !errorlevel! neq 0 exit /b !errorlevel!
 
-:: Build Koolo binary with Garble
-call :print_header "Building Koolo Binary"
+:: Build D2RBot binary with Garble
+call :print_header "Building D2RBot Binary"
 if "%1"=="" (set VERSION=dev) else (set VERSION=%1)
 
 :: Generate unique build identifiers
 for /f "delims=" %%a in ('powershell -Command "[guid]::NewGuid().ToString()"') do set "BUILD_ID=%%a"
 for /f "delims=" %%b in ('powershell -Command "Get-Date -Format 'o'"') do set "BUILD_TIME=%%b"
 
-:: Build an obfuscated Koolo  binary
-call :print_step "Compiling Obfuscated Koolo executable"
+:: Build an obfuscated D2RBot binary
+call :print_step "Compiling Obfuscated D2RBot executable"
 (
-    garble -literals=false -seed=random build -a -trimpath -tags static --ldflags "-s -w -H windowsgui -X 'main.buildID=%BUILD_ID%' -X 'main.buildTime=%BUILD_TIME%' -X 'github.com/hectorgimenez/koolo/internal/config.Version=%VERSION%'" -o "build\%BUILD_ID%.exe" ./cmd/koolo 2>&1
+    garble -literals=false -seed=random build -a -trimpath -tags static --ldflags "-s -w -H windowsgui -X 'main.buildID=%BUILD_ID%' -X 'main.buildTime=%BUILD_TIME%' -X 'github.com/hectorgimenez/d2rbot/internal/config.Version=%VERSION%'" -o "build\d2rbot.exe" ./cmd/d2rbot 2>&1
 ) > garble.log
 
 :: Capture and style seed information
@@ -86,10 +86,10 @@ for /f "tokens=4" %%s in ('findstr /C:"-seed chosen at random:" garble.log') do 
 del garble.log
 
 if !errorlevel! neq 0 (
-    call :print_error "Failed to build Koolo binary"
+    call :print_error "Failed to build D2RBot binary"
     exit /b 1
 )
-call :print_success "Successfully built obfuscated executable"
+call :print_success "Successfully built obfuscated D2RBot executable"
 
 :: Handle tools folder first
 call :print_header "Handling Tools"
@@ -142,17 +142,17 @@ if exist build\config\Settings.json (
     call :print_success "Settings.json successfully copied"
 )
 
-:: Handle koolo.yaml
-if not exist build\config\koolo.yaml (
-    call :print_step "Copying koolo.yaml.dist"
-    copy config\koolo.yaml.dist build\config\koolo.yaml > nul
+:: Handle d2rbot.yaml
+if not exist build\config\d2rbot.yaml (
+    call :print_step "Copying d2rbot.yaml.dist"
+    copy config\d2rbot.yaml.dist build\config\d2rbot.yaml > nul
     if !errorlevel! neq 0 (
-        call :print_error "Failed to copy koolo.yaml.dist"
+        call :print_error "Failed to copy d2rbot.yaml.dist"
         exit /b 1
     )
-    call :print_success "koolo.yaml.dist successfully copied"
+    call :print_success "d2rbot.yaml.dist successfully copied"
 ) else (
-    call :print_info "koolo.yaml already exists in build\config, skipping copy"
+    call :print_info "d2rbot.yaml already exists in build\config, skipping copy"
 )
 
 :: Copy template folder
@@ -253,8 +253,8 @@ if not exist config (
     exit /b 1
 )
 
-if not exist config\koolo.yaml.dist (
-    call :print_error "koolo.yaml.dist is missing from config directory"
+if not exist config\d2rbot.yaml.dist (
+    call :print_error "d2rbot.yaml.dist is missing from config directory"
     exit /b 1
 )
 
@@ -274,8 +274,8 @@ if not exist tools\handle64.exe (
     exit /b 1
 )
 
-if not exist tools\koolo-map.exe (
-    call :print_error "koolo-map.exe is missing from tools directory"
+if not exist tools\d2rbot-map.exe (
+    call :print_error "d2rbot-map.exe is missing from tools directory"
     exit /b 1
 )
 
@@ -284,6 +284,25 @@ call :print_step "Checking build dependencies"
 go version >nul 2>&1
 if !errorlevel! neq 0 (
     call :print_error "Go is not installed or not in PATH"
+    exit /b 1
+)
+
+:: Verify write permissions in current directory
+call :print_step "Checking write permissions"
+echo. > test_write.tmp 2>nul
+if !errorlevel! neq 0 (
+    call :print_error "No write permissions in current directory"
+    exit /b 1
+)
+del test_write.tmp >nul 2>&1
+
+call :print_success "Environment validation completed"
+goto :eof
+
+:: Function to print a warning message
+:print_warning
+powershell -Command "Write-Host '    WARNING: %~1' -ForegroundColor Yellow"
+goto :eoferror "Go is not installed or not in PATH"
     exit /b 1
 )
 

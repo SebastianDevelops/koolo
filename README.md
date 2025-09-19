@@ -1,125 +1,297 @@
-We are completing the leveling feature and work on other improvements.
+# D2RBot - Complete User Guide
 
-Currently working classes: Sorceress, Paladin, Assassin
+**D2RBot** is an advanced automation tool for Diablo II: Resurrected that can run your characters automatically, perform farming runs, manage inventory, and handle various game mechanics. This guide will walk you through everything you need to know to use D2RBot effectively.
 
-As written more detailed below you need to install:
-
-- Go (1.24, not 1.25!)
-- Garble
-
-Make sure the game is set to English to prevent any language-related bugs.
-
-Use better_build.bat to build the application.
-
-- Use "Sorc (Leveling as Fire)", "Paladin (Leveling)" or "Assassin (Leveling)".
-- Choose "leveling" as enabled run under "Run Settings"
-- Start your char with lvl 1 as the autoconfig currently works at lvl 1 only. Alternatively you can check act1.go for detailed manual config. This handling will be enhanced later.
-
-Interested in more features? You can join the development or just give give us your feedback in the following discord server: https://discord.gg/5GCdFDbJnx
-
----
-<div style="background-color: #FFFACD; padding: 10px; border-radius: 5px; text-align: center">
-  <h2 style="margin: 0;">⚠️ Warning: People using this tool have been reporting bans. Do not use it.</h2>
-</div>
-<p align="center">
-  <img src="assets/koolo.webp" alt="Koolo" width="150">
-</p>
-<h3 align="center">Koolo</h3>
+## ⚠️ Important Disclaimer
+**Using automation tools may result in account bans. Use at your own risk. This tool is for educational purposes only.**
 
 ---
 
-Koolo is a small bot for Diablo II: Resurrected (Expansion). Koolo project was built for informational and educational purposes
-only, it's not intended for online usage. Feel free to contribute opening pull requests with new features or bugfixes.
-Koolo reads game memory and interacts with the game injecting clicks/keystrokes to the game window. As good as it can.
+## What D2RBot Can Do
 
-Feel free to join our Discord community to report bugs, ask for help or just to chat: [Koolo Discord]( https://discord.gg/zgFMyzAFHE)
+### Supported Character Classes
+- **Sorceress**: Blizzard, Nova, Lightning, Hydra Orb, Fireball, Fire Leveling
+- **Paladin**: Hammerdin, FOH (Fist of Heavens), Leveling
+- **Assassin**: Lightning Trapsin, Mosaic, Leveling
+- **Barbarian**: Berserk (Travincal specialist)
+- **Druid**: Tornado (Work in Progress)
+- **Amazon**: Javazon (Work in Progress)
 
-## Disclaimer
-Can I get banned for using Koolo? The answer is a crystal clear yes, you can get banned although at this point I'm
-not aware of any ban for using it. I'm not responsible for any ban or any other consequence that may arise from it.
+### Automated Features
+- **Farming Runs**: 25+ different farming locations including Countess, Mephisto, Baal, Diablo, Cows, and more
+- **Inventory Management**: Automatic item pickup, stashing, selling, and inventory organization
+- **Health Management**: Auto-potion use for character and mercenary
+- **Safety Features**: Chicken (emergency exit) when health is low
+- **Item Management**: Auto-repair equipment, revive mercenary, use buffs
+- **Advanced Features**: Gambling, cubing recipes, terror zone detection
+- **Multi-Character Support**: Run multiple characters simultaneously
 
-## Features
-- Blizzard Sorceress, Nova Sorceress, FoH, Berserk Barbarian Hork (Travincal), Mosaic are currently supported. Hammerdin, Javazon and Winddruid are WIP
-- Supported runs: Countess, Andariel, Ancient Tunnels, Summoner, Mephisto, Council, Eldritch-Shenk, Endugu, Drifter Cavern, Pindleskin, Nihlathak,
-  Tristram, Lower Kurast and Superchests, Stony Tomb, The Pit, Arachnid Lair, Baal, Duriel, Tal Rasha Tombs, Diablo, Cows, Treshsocket
-- Multi window support (run multiple bots at the same time)
-- Bot integration for Discord and Telegram
-- "Companion mode" one leader bot will be creating games and the rest of the bots will join the game... (not working currently)
-- Pickit based on NIP files
-- Auto potion for health and mana (also mercenary)
-- Chicken when low health
-- Inventory slot locking
-- Revive mercenary
-- CTA buff and class buffs
-- Auto repair
-- Skip on immune
-- Auto leveling sorceress and paladin (WIP) this feature is not finished.
-- Auto gambling
-- Auto cubing and crafting (WIP)
-- Terror Zones (WIP)
-- Classic is not supported
+## System Requirements
 
-## Requirements
-- Diablo II: Resurrected (1280x720 required, windowed mode, ensure accessibility large fonts disabled)
-- **Diablo II: LOD 1.13c** (IMPORTANT: It will **NOT** work without it, this step is not optional)
+### Essential Requirements
+1. **Diablo II: Resurrected** - Latest version
+2. **Diablo II: Lord of Destruction 1.13c** - **CRITICAL**: D2RBot will not work without this
+3. **Windows Operating System** - Windows 10/11 recommended
+4. **Game Settings**:
+   - Resolution: **1280x720** (required)
+   - Display Mode: **Windowed** (required)
+   - Language: **English** (required)
+   - Accessibility large fonts: **Disabled**
 
-## Quick Start
-### Preparing the character
-- Koolo will read game keybindings in order to use the skills, doesn't matter what key is used, but the skills for the build must be set.
-- For blizzard sorceress, set the **left** skill to Glacial Spike or Ice Blast, and for Hammerdin to Blessed Hammer.
-- Foh set keybind for FOH and holybolt on left skill, conviction on right skill
-- Berserk barb set berserk as left skill. Also to use FindItem you need higher goldfind on secondary weapons slot. Alibaba + anything will work.
-- Buy TP and ID tomes and one stack of keys and keep them in the inventory, additionally set the TP tome to a key binding, this is **required**.
-- Horadric Cube can be stashed or kept in inventory, Koolo will use it to cube recipes if enabled.
-- Keep the charms in the inventory, Koolo can be configured to lock specific inventory slots.
+## Getting Started
 
-### Running the tool
-- If you haven't done yet, install **Diablo II: LOD 1.13c** (required)
-- [Download](https://github.com/hectorgimenez/koolo/releases) the latest Koolo release (recommended for most users), or alternatively you can [build it from source](#development-environment)
-- Extract the zip file in a directory of your choice.
-- Run `koolo.exe`.
-- Follow the setup wizard, it will guide you through the process of setting up the bot, you will need to setup some directories and character configuration.
-- If you want to back up/restore your configuration, and for manual setup, you can find the configuration files in the `config` directory.
+### Step 1: Installation
+1. **Install Diablo II: LOD 1.13c** (if not already installed)
+2. **Download D2RBot** from the releases section
+3. **Extract** the zip file to a folder of your choice
+4. **Run d2rbot.exe** to start the application
 
-## Pickit rules
-Item pickit is based on [NIP files](https://github.com/blizzhackers/pickits/blob/master/NipGuide.md), you can find them in the `config/{character}/pickit` directory.
+### Step 2: Initial Setup
+When you first run D2RBot, you'll see a setup wizard that will guide you through:
+1. **Game Directory Setup**: Point D2RBot to your D2R and D2 LOD installations
+2. **Character Configuration**: Create your first character profile
+3. **Basic Settings**: Configure essential options
 
-All the .nip files contained in the pickit directory will be loaded, so you can have multiple pickit files.
+---
 
-There are some considerations to take into account:
-- If item fully matches the pickit rule before being identified, it will be picked up and stashed unidentified.
-- If item doesn't match the full rule, will be identified and checked again, if fully matches a rule it will be stashed otherwise sold to vendor.
-- If there is an error on the NIP file or Koolo can not understand it, the application will not start.
-- Pickit rules can not be changed in runtime (yet), you will need to restart Koolo to apply changes.
+## Single Player Setup Guide
 
-## Development environment
-**Note:** This is only required if you want to build the project from source. If you want to run the bot, you can just download the [latest release](https://github.com/hectorgimenez/koolo/releases).
+### Prerequisites for Single Player
+1. **Create your character** in Diablo II: Resurrected
+2. **Save your character** - it will be stored in:
+   ```
+   C:\Users\[YourName]\Saved Games\Diablo II Resurrected\mods\d2rbot\
+   ```
+3. **Set game language to English**
 
-Setting the development environment is pretty straightforward, but the following dependencies are **required** to build the project.
+### Character Configuration for Single Player
+1. **Open D2RBot** and click "Add Character"
+2. **Step 1 - Basic Setup**:
+   - **Configuration Name**: Choose a name (e.g., "MySorc")
+   - **Character Class**: Select your character's class
+   - **Character Name**: Enter your exact character name from the game
 
-### Dependencies
-- [Download Go 1.24](https://go.dev/dl/) <ins>⚠️**not the version 1.25**⚠️</ins> 
-- [Install git](https://gitforwindows.org/)
+3. **Step 2 - Authentication**:
+   - **Authentication Method**: Select "None (Single Player)"
+   - **Leave username/password empty**
+   - **Client Settings**: Configure as needed
 
-### Building from source
+4. **Step 3 - Game Settings**:
+   - **Game Difficulty**: Choose Normal/Nightmare/Hell
+   - **Max Game Length**: Set time limit (recommended: 300-600 seconds)
 
-First, we open the terminal and install [Garble](https://github.com/burrowers/garble) using the following command:
-```shell
-go install mvdan.cc/garble@v0.14.2
-```
+5. **Complete remaining steps** with your preferred settings
 
-Next, run the following commands in project root directory:
-```shell
-git clone https://github.com/kwader2k/koolo.git
-cd koolo
-better_build.bat
-```
-This will produce the "build" directory with the executable file and all the required assets.
+### Preparing Your Single Player Character
 
-### Updating with latest changes
-In order to fetch latest `main` branch changes run the following commands in project root directory:
-```shell
-git pull
-better_build.bat
-```
-**Note**: If you use `build.bat`, the `build` directory **will be deleted**, so if you customized any file(s) in there, make sure to backup it before running `build.bat`.
+#### Essential Items in Inventory:
+- **Town Portal Tome** (bind to a hotkey - REQUIRED)
+- **Identify Tome**
+- **Keys** (at least one stack)
+- **Horadric Cube** (can be in stash or inventory)
+- **Charms** (D2RBot can lock inventory slots to protect them)
+
+#### Skill Bindings (Class-Specific):
+- **Blizzard Sorceress**: Left skill = Glacial Spike or Ice Blast
+- **Hammerdin**: Left skill = Blessed Hammer
+- **FOH Paladin**: Left skill = FOH or Holy Bolt, Right skill = Conviction
+- **Berserk Barbarian**: Left skill = Berserk
+- **Other classes**: Ensure main attack skill is bound
+
+---
+
+## Online (Battle.net) Setup Guide
+
+### Prerequisites for Online Play
+1. **Valid Battle.net account**
+2. **Character created on Battle.net**
+3. **Authentication credentials**
+
+### Authentication Methods
+
+#### Method 1: Username & Password
+1. **Step 2 - Authentication**:
+   - **Authentication Method**: "Username & Password"
+   - **Username**: Your Battle.net username
+   - **Password**: Your Battle.net password
+   - **Realm**: Select your region (EU/US/KR)
+
+#### Method 2: Auth Token (Advanced)
+1. **Authentication Method**: "Auth Token"
+2. **Obtain your auth token** from Battle.net client
+3. **Enter token** in the Authentication Token field
+4. **Select realm**
+
+### Online Game Settings
+1. **Create Lobby Games**: Enable if you want public games
+2. **Game Name Pattern**: Template for game names (e.g., "farm-")
+3. **Game Password**: Leave blank for public, set password for private
+
+---
+
+## Character Setup Guide
+
+### Dashboard Overview
+After creating a character, you'll see the main dashboard with:
+- **Character cards** showing status and stats
+- **Control buttons**: Start, Stop, Pause
+- **Real-time statistics**
+- **Run progress tracking**
+
+### Configuring Runs
+1. **Go to character settings**
+2. **Navigate to Step 5 - Runs & Automation**
+3. **Drag and drop runs** between Enabled/Disabled lists
+4. **Configure run-specific settings** by clicking on each run
+5. **Enable "Randomize run order"** for variety
+
+### Popular Run Configurations
+
+#### Magic Find Setup:
+- **Mephisto** (fast, good drops)
+- **Ancient Tunnels** (no immunities)
+- **Pindleskin** (quick runs)
+- **Countess** (runes)
+
+#### Leveling Setup:
+- **Enable "leveling" run only**
+- **Use leveling character classes**
+- **Start at level 1** for auto-configuration
+
+#### Rune Farming:
+- **Countess** (low-mid runes)
+- **Lower Kurast** (high runes)
+- **Travincal** (high runes)
+
+### Health and Safety Settings
+1. **Step 4 - Combat & Health**:
+   - **Healing at (%)**: When to use healing potions (recommended: 75%)
+   - **Mana at (%)**: When to use mana potions (recommended: 15%)
+   - **Chicken at (%)**: Emergency exit threshold (recommended: 30%)
+   - **Mercenary settings**: Configure merc healing
+
+2. **Belt Layout**: Configure potion types in each belt column
+3. **Inventory Lock**: Check boxes to protect inventory slots
+
+---
+
+## Advanced Features
+
+### Inventory Management
+- **Pickit System**: Uses NIP files to determine which items to pick up
+- **Auto-Stashing**: Automatically stores items in stash
+- **Auto-Selling**: Sells unwanted items to vendors
+- **Inventory Locking**: Protects specific inventory slots
+
+### Companion Mode
+1. **Enable Companion System** in Step 3
+2. **Set one character as Leader**
+3. **Other characters follow the leader**
+4. **Leader creates games, followers join**
+
+### Scheduler
+1. **Enable Scheduler** in Step 3
+2. **Set time ranges** for each day of the week
+3. **Bot automatically starts/stops** during specified times
+4. **Supports multiple time ranges per day**
+
+### Gambling
+1. **Enable in Step 6 - Advanced**
+2. **Bot automatically gambles** when gold stash is full
+3. **Configurable item types** to gamble
+
+### Cube Recipes
+1. **Enable in Step 6 - Advanced**
+2. **Select specific recipes** to automate
+3. **Gem upgrading, charm rolling, etc.**
+
+---
+
+## Running Your Bot
+
+### Starting the Bot
+1. **Open D2RBot dashboard**
+2. **Click "Start" on your character card**
+3. **Bot will launch D2R automatically**
+4. **Monitor progress** in real-time
+
+### Monitoring
+- **Character Status**: In-game, Paused, Stopped
+- **Current Run**: Which area is being farmed
+- **Statistics**: Games completed, items found, deaths
+- **Logs**: Detailed activity logs available in Logs tab
+
+### Stopping the Bot
+- **Stop Button**: Graceful shutdown after current game
+- **Pause Button**: Temporary pause (can resume)
+- **Emergency Stop**: Force quit if needed
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+#### "Character not found"
+- **Check character name spelling**
+- **Ensure character exists in correct mode** (Single Player vs Online)
+- **Verify authentication settings**
+
+#### "Game not launching"
+- **Check D2R path in settings**
+- **Verify D2 LOD 1.13c installation**
+- **Run as Administrator**
+
+#### "Bot not moving/acting"
+- **Check game resolution** (must be 1280x720)
+- **Verify windowed mode**
+- **Check skill bindings**
+- **Ensure TP tome is bound to hotkey**
+
+#### "Items not being picked up"
+- **Check pickit files** in config folder
+- **Verify inventory space**
+- **Check item filtering settings**
+
+### Performance Tips
+1. **Close unnecessary programs**
+2. **Use SSD for better performance**
+3. **Adjust game settings** for optimal performance
+4. **Monitor system resources**
+
+---
+
+## Safety and Best Practices
+
+### Account Safety
+- **Use dedicated accounts** for botting
+- **Don't bot on main accounts**
+- **Take regular breaks**
+- **Vary your patterns**
+
+### Configuration Backup
+- **Backup config folder** regularly
+- **Export character settings** before major changes
+- **Keep multiple configurations** for different purposes
+
+### Monitoring
+- **Check bot regularly**
+- **Monitor for stuck situations**
+- **Review logs for errors**
+- **Watch for game updates** that might break compatibility
+
+---
+
+## Configuration Files
+
+All settings are stored in the `config` directory:
+- **d2rbot.yaml**: Global settings
+- **config/[character]/config.yaml**: Character-specific settings
+- **config/[character]/pickit/**: Item pickup rules
+- **logs/**: Activity logs
+
+You can manually edit these files for advanced customization, but the web interface is recommended for most users.
+
+---
+
+*This guide covers the essential aspects of using D2RBot. For advanced customization and troubleshooting, refer to the configuration files and logs. Remember to always use automation tools responsibly and at your own risk.*

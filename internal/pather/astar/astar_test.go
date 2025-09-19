@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/hectorgimenez/d2go/pkg/data"
-	"github.com/hectorgimenez/koolo/internal/game"
+	"github.com/hectorgimenez/d2rbot/internal/game"
 )
 
 func BenchmarkAstar(b *testing.B) {

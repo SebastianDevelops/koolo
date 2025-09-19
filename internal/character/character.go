@@ -7,7 +7,7 @@ import (
 
 	"github.com/hectorgimenez/d2go/pkg/data"
 	"github.com/hectorgimenez/d2go/pkg/data/stat"
-	"github.com/hectorgimenez/koolo/internal/context"
+	"github.com/hectorgimenez/d2rbot/internal/context"
 )
 
 func BuildCharacter(ctx *context.Context) (context.Character, error) {

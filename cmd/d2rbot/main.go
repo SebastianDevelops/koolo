@@ -8,15 +8,15 @@ import (
 	_ "net/http/pprof"
 	"runtime/debug"
 
-	sloggger "github.com/hectorgimenez/koolo/cmd/koolo/log"
-	"github.com/hectorgimenez/koolo/internal/bot"
-	"github.com/hectorgimenez/koolo/internal/config"
-	"github.com/hectorgimenez/koolo/internal/event"
-	"github.com/hectorgimenez/koolo/internal/remote/discord"
-	"github.com/hectorgimenez/koolo/internal/remote/telegram"
-	"github.com/hectorgimenez/koolo/internal/server"
-	"github.com/hectorgimenez/koolo/internal/utils"
-	"github.com/hectorgimenez/koolo/internal/utils/winproc"
+	sloggger "github.com/hectorgimenez/d2rbot/cmd/d2rbot/log"
+	"github.com/hectorgimenez/d2rbot/internal/bot"
+	"github.com/hectorgimenez/d2rbot/internal/config"
+	"github.com/hectorgimenez/d2rbot/internal/event"
+	"github.com/hectorgimenez/d2rbot/internal/remote/discord"
+	"github.com/hectorgimenez/d2rbot/internal/remote/telegram"
+	"github.com/hectorgimenez/d2rbot/internal/server"
+	"github.com/hectorgimenez/d2rbot/internal/utils"
+	"github.com/hectorgimenez/d2rbot/internal/utils/winproc"
 	"github.com/inkeliz/gowebview"
 	"golang.org/x/sync/errgroup"
 )
@@ -53,7 +53,7 @@ func main() {
 		return
 	}
 
-	logger, err := sloggger.NewLogger(config.Koolo.Debug.Log, config.Koolo.LogSaveDirectory, "")
+	logger, err := sloggger.NewLogger(config.D2RBot.Debug.Log, config.D2RBot.LogSaveDirectory, "")
 	if err != nil {
 		log.Fatalf("Error starting logger: %s", err.Error())
 	}
@@ -61,10 +61,10 @@ func main() {
 
 	defer func() {
 		if r := recover(); r != nil {
-			err = fmt.Errorf("fatal error detected, Koolo will close with the following error: %v\n Stacktrace: %s", r, debug.Stack())
+			err = fmt.Errorf("fatal error detected, D2RBot will close with the following error: %v\n Stacktrace: %s", r, debug.Stack())
 			logger.Error(err.Error())
 			sloggger.FlushAndClose()
-			utils.ShowDialog("Koolo error :(", fmt.Sprintf("Koolo will close due to an expected error, please check the latest log file for more info!\n %s", err.Error()))
+			utils.ShowDialog("D2RBot error :(", fmt.Sprintf("D2RBot will close due to an expected error, please check the latest log file for more info!\n %s", err.Error()))
 		}
 	}()
 
@@ -89,7 +89,7 @@ func main() {
 		defer cancel()
 		displayScale := config.GetCurrentDisplayScale()
 		w, err := gowebview.New(&gowebview.Config{URL: "http://localhost:8087", WindowConfig: &gowebview.WindowConfig{
-			Title: "Koolo",
+			Title: "D2RBot",
 			Size: &gowebview.Point{
 				X: int64(1280 * displayScale),
 				Y: int64(720 * displayScale),
@@ -112,8 +112,8 @@ func main() {
 	}))
 
 	// Discord Bot initialization
-	if config.Koolo.Discord.Enabled {
-		discordBot, err := discord.NewBot(config.Koolo.Discord.Token, config.Koolo.Discord.ChannelID, manager)
+	if config.D2RBot.Discord.Enabled {
+		discordBot, err := discord.NewBot(config.D2RBot.Discord.Token, config.D2RBot.Discord.ChannelID, manager)
 		if err != nil {
 			logger.Error("Discord could not been initialized", slog.Any("error", err))
 			return
@@ -126,8 +126,8 @@ func main() {
 	}
 
 	// Telegram Bot initialization
-	if config.Koolo.Telegram.Enabled {
-		telegramBot, err := telegram.NewBot(config.Koolo.Telegram.Token, config.Koolo.Telegram.ChatID, logger)
+	if config.D2RBot.Telegram.Enabled {
+		telegramBot, err := telegram.NewBot(config.D2RBot.Telegram.Token, config.D2RBot.Telegram.ChatID, logger)
 		if err != nil {
 			logger.Error("Telegram could not been initialized", slog.Any("error", err))
 			return
@@ -151,7 +151,7 @@ func main() {
 
 	g.Go(wrapWithRecover(logger, func() error {
 		<-ctx.Done()
-		logger.Info("Koolo shutting down...")
+		logger.Info("D2RBot shutting down...")
 		cancel()
 		manager.StopAll()
 		scheduler.Stop()
@@ -166,7 +166,7 @@ func main() {
 	err = g.Wait()
 	if err != nil {
 		cancel()
-		logger.Error("Error running Koolo", slog.Any("error", err))
+		logger.Error("Error running D2RBot", slog.Any("error", err))
 		return
 	}
 

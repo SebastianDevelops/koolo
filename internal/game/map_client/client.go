@@ -12,11 +12,11 @@ import (
 	"github.com/hectorgimenez/d2go/pkg/data/difficulty"
 	"github.com/hectorgimenez/d2go/pkg/data/npc"
 	"github.com/hectorgimenez/d2go/pkg/data/object"
-	"github.com/hectorgimenez/koolo/internal/config"
+	"github.com/hectorgimenez/d2rbot/internal/config"
 )
 
 func GetMapData(seed string, difficulty difficulty.Difficulty) (MapData, error) {
-	cmd := exec.Command("./tools/koolo-map.exe", config.Koolo.D2LoDPath, "-s", seed, "-d", getDifficultyAsNum(difficulty))
+	cmd := exec.Command("./tools/d2rbot-map.exe", config.D2RBot.D2LoDPath, "-s", seed, "-d", getDifficultyAsNum(difficulty))
 	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	stdout, err := cmd.Output()
 	if err != nil {

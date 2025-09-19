@@ -4,7 +4,7 @@ import (
 	"github.com/hectorgimenez/d2go/pkg/data"
 	"github.com/hectorgimenez/d2go/pkg/data/area"
 	"github.com/hectorgimenez/d2go/pkg/data/npc"
-	"github.com/hectorgimenez/koolo/internal/game"
+	"github.com/hectorgimenez/d2rbot/internal/game"
 )
 
 type A2 struct {

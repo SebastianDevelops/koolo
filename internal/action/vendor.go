@@ -7,9 +7,9 @@ import (
 	"github.com/hectorgimenez/d2go/pkg/data/item"
 	"github.com/hectorgimenez/d2go/pkg/data/npc"
 	"github.com/hectorgimenez/d2go/pkg/data/stat"
-	"github.com/hectorgimenez/koolo/internal/action/step"
-	botCtx "github.com/hectorgimenez/koolo/internal/context"
-	"github.com/hectorgimenez/koolo/internal/town"
+	"github.com/hectorgimenez/d2rbot/internal/action/step"
+	botCtx "github.com/hectorgimenez/d2rbot/internal/context"
+	"github.com/hectorgimenez/d2rbot/internal/town"
 	"github.com/lxn/win"
 )
 

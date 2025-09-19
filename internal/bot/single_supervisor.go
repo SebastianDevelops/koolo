@@ -11,13 +11,13 @@ import (
 
 	"github.com/hectorgimenez/d2go/pkg/data"
 	"github.com/hectorgimenez/d2go/pkg/data/skill"
-	"github.com/hectorgimenez/koolo/internal/config"
-	ct "github.com/hectorgimenez/koolo/internal/context"
-	"github.com/hectorgimenez/koolo/internal/event"
-	"github.com/hectorgimenez/koolo/internal/game"
-	"github.com/hectorgimenez/koolo/internal/health"
-	"github.com/hectorgimenez/koolo/internal/run"
-	"github.com/hectorgimenez/koolo/internal/utils"
+	"github.com/hectorgimenez/d2rbot/internal/config"
+	ct "github.com/hectorgimenez/d2rbot/internal/context"
+	"github.com/hectorgimenez/d2rbot/internal/event"
+	"github.com/hectorgimenez/d2rbot/internal/game"
+	"github.com/hectorgimenez/d2rbot/internal/health"
+	"github.com/hectorgimenez/d2rbot/internal/run"
+	"github.com/hectorgimenez/d2rbot/internal/utils"
 )
 
 // Define a constant for the timeout on menu operations

@@ -4,21 +4,21 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/hectorgimenez/d2go/pkg/data/difficulty"
 	"github.com/hectorgimenez/d2go/pkg/data"
 	"github.com/hectorgimenez/d2go/pkg/data/area"
+	"github.com/hectorgimenez/d2go/pkg/data/difficulty"
 	"github.com/hectorgimenez/d2go/pkg/data/item"
 	"github.com/hectorgimenez/d2go/pkg/data/mode"
 	"github.com/hectorgimenez/d2go/pkg/data/npc"
 	"github.com/hectorgimenez/d2go/pkg/data/object"
 	"github.com/hectorgimenez/d2go/pkg/data/quest"
-	"github.com/hectorgimenez/koolo/internal/action"
-	"github.com/hectorgimenez/koolo/internal/action/step"
-	"github.com/hectorgimenez/koolo/internal/config"
-	"github.com/hectorgimenez/koolo/internal/context"
-	"github.com/hectorgimenez/koolo/internal/game"
-	"github.com/hectorgimenez/koolo/internal/ui"
-	"github.com/hectorgimenez/koolo/internal/utils"
+	"github.com/hectorgimenez/d2rbot/internal/action"
+	"github.com/hectorgimenez/d2rbot/internal/action/step"
+	"github.com/hectorgimenez/d2rbot/internal/config"
+	"github.com/hectorgimenez/d2rbot/internal/context"
+	"github.com/hectorgimenez/d2rbot/internal/game"
+	"github.com/hectorgimenez/d2rbot/internal/ui"
+	"github.com/hectorgimenez/d2rbot/internal/utils"
 )
 
 const (
@@ -43,13 +43,9 @@ func (d Duriel) Name() string {
 }
 
 func (d Duriel) Run() error {
-	
-	
-	
-		if d.ctx.CharacterCfg.Game.Duriel.UseThawing {
-			
 
-		
+	if d.ctx.CharacterCfg.Game.Duriel.UseThawing {
+
 		potsToBuy := 6
 		if d.ctx.Data.MercHPPercent() > 0 && !d.ctx.CharacterCfg.HidePortraits {
 			potsToBuy = 12
@@ -90,7 +86,7 @@ func (d Duriel) Run() error {
 		step.CloseAllMenus()
 
 	}
-	
+
 	err := action.WayPoint(area.CanyonOfTheMagi)
 	if err != nil {
 		return err
@@ -162,12 +158,10 @@ func (d Duriel) Run() error {
 		utils.Sleep(20000)
 	}
 
-						_, isLevelingChar := d.ctx.Char.(context.LevelingCharacter)
+	_, isLevelingChar := d.ctx.Char.(context.LevelingCharacter)
 	if isLevelingChar && d.ctx.CharacterCfg.Game.Difficulty != difficulty.Hell {
 
-				
-	action.ClearAreaAroundPlayer(20, data.MonsterAnyFilter())
-
+		action.ClearAreaAroundPlayer(20, data.MonsterAnyFilter())
 
 		action.ReturnTown()
 		action.IdentifyAll(false)
@@ -176,11 +170,11 @@ func (d Duriel) Run() error {
 		action.Repair()
 		action.VendorRefill(true, true)
 
-	err = action.UsePortalInTown()
-	if err != nil {
-		return err
-	}}
-
+		err = action.UsePortalInTown()
+		if err != nil {
+			return err
+		}
+	}
 
 	for _, obj := range d.ctx.Data.Areas[realTalRashaTomb].Objects {
 		if obj.Name == object.HoradricOrifice {

@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/hectorgimenez/d2go/pkg/data"
-	"github.com/hectorgimenez/koolo/internal/event"
+	"github.com/hectorgimenez/d2rbot/internal/event"
 )
 
 const (

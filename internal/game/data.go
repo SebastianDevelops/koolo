@@ -13,7 +13,7 @@ import (
 	"github.com/hectorgimenez/d2go/pkg/data/quest"
 	"github.com/hectorgimenez/d2go/pkg/data/skill"
 	"github.com/hectorgimenez/d2go/pkg/data/stat"
-	"github.com/hectorgimenez/koolo/internal/config"
+	"github.com/hectorgimenez/d2rbot/internal/config"
 )
 
 type Data struct {

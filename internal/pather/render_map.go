@@ -9,7 +9,7 @@ import (
 	"os"
 
 	"github.com/hectorgimenez/d2go/pkg/data"
-	"github.com/hectorgimenez/koolo/internal/game"
+	"github.com/hectorgimenez/d2rbot/internal/game"
 )
 
 func (pf *PathFinder) renderMap(grid *game.Grid, from, to data.Position, path Path) {

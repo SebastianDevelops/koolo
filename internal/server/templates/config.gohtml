@@ -3,179 +3,306 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="color-scheme" content="light dark"/>
+    <meta name="color-scheme" content="dark"/>
     <link rel="stylesheet" href="../assets/css/pico.min.css">
     <link rel="stylesheet" href="../assets/css/custom.css">
-    <title>Koolo Settings</title>
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap-icons.css">
+    <title>D2RBot Settings</title>
+    <style>
+        .wizard-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, var(--card-background-color) 0%, rgba(26, 31, 46, 0.8) 100%);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .wizard-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 25px 30px;
+            text-align: center;
+        }
+        .wizard-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+        .step-navigation {
+            display: flex;
+            background: var(--tab-background);
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+        .step-item {
+            flex: 1;
+            min-width: 120px;
+            padding: 20px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            position: relative;
+        }
+        .step-item.active {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(44, 90, 160, 0.1) 100%);
+            border-bottom-color: var(--primary);
+        }
+        .step-item.completed {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(32, 201, 151, 0.1) 100%);
+        }
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            color: var(--background-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        .step-item.active .step-number {
+            background: var(--primary);
+            color: white;
+        }
+        .step-item.completed .step-number {
+            background: #28a745;
+            color: white;
+        }
+        .step-title {
+            font-size: 0.85em;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .step-item.active .step-title {
+            color: var(--text-primary);
+        }
+        .step-content {
+            padding: 30px;
+            min-height: 500px;
+        }
+        .step-pane {
+            display: none;
+        }
+        .step-pane.active {
+            display: block;
+            animation: fadeInUp 0.4s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .step-actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 30px;
+            background: var(--tab-background);
+            border-top: 1px solid var(--border-color);
+        }
+        .btn-wizard {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-wizard.btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+            color: white;
+        }
+        .btn-wizard.btn-secondary {
+            background: transparent;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+        .form-section {
+            margin-bottom: 25px;
+        }
+        .form-section h4 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .form-section h4 i {
+            font-size: 1.1em;
+        }
+    </style>
 </head>
 <body>
-<main class="container">
+<main class="container-fluid">
     {{ if ne .ErrorMessage "" }}
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <div class="error-message">
-                    {{ .ErrorMessage }}
-                </div>
+        <div class="error-message" style="margin: 20px; padding: 15px; background: #dc3545; color: white; border-radius: 8px;">
+            {{ .ErrorMessage }}
+        </div>
+    {{ end }}
+    
+    <div class="wizard-container">
+        <div class="wizard-header">
+            <h1 class="wizard-title">D2RBot Settings</h1>
+        </div>
+        
+        <div class="step-navigation">
+            <div class="step-item active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-title">Game Paths</div>
+            </div>
+            <div class="step-item" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-title">General Settings</div>
+            </div>
+            <div class="step-item" data-step="3">
+                <div class="step-number">3</div>
+                <div class="step-title">Debug Options</div>
             </div>
         </div>
-    </div>
-    {{ end }}
-    <div class="notification">
-        <h2>Settings</h2>
-        <form method="post">
-            <fieldset>
-                <label>
-                    Diablo II Resurrected Path
-                    <input
-                            name="d2rpath"
-                            placeholder="C:\Program Files (x86)\Diablo II Resurrected"
-                            value="{{.D2RPath}}"
-                    />
-                </label>
-                <label>
-                    Diablo II: LoD 1.13c Path (MUST BE 1.13c, otherwise it won't work)
-                    <input
-                            name="d2lodpath"
-                            placeholder="E:\games\Diablo II"
-                            value="{{.D2LoDPath}}"
-                    />
-                </label>
-                <label>
-                    Centralized Pickit Path (leave blank if you don't want to use a single location for all pickit files)
-                    <input
-                            name="centralized_pickit_path"
-                            placeholder="E:\games\mypickits"
-                            value="{{.CentralizedPickitPath}}"
-                    />
-                </label>
-                <label>
-                    <input
-                            {{ if .UseCustomSettings }}
-                                checked="checked"
-                            {{ end }}
-                            type="checkbox"
-                            name="use_custom_settings"
-                            value="true"
-                    />
-                    Use custom game settings
-                </label>
-                <label>
-                    <input
-                            {{ if .GameWindowArrangement }}
-                                checked="checked"
-                            {{ end }}
-                            type="checkbox"
-                            name="game_window_arrangement"
-                            value="true"
-                    />
-                    Auto reposition game windows
-                </label>
-                <h4>Debug</h4>
-                <fieldset class="grid">
-                    <label>
-                        <input
-                                {{ if .Debug.Log }}
-                                    checked="checked"
-                                {{ end }}
-                                type="checkbox"
-                                name="debug_log"
-                                value="true"
-                        />
-                        Debug mode (better details in logs, more noise)
-                    </label>
-                    <label>
-                        <input
-                                {{ if .Debug.Screenshots }}
-                                    checked="checked"
-                                {{ end }}
-                                type="checkbox"
-                                name="debug_screenshots"
-                                value="true"
-                        />
-                        Save screenshot on error
-                    </label>
-                </fieldset>
-                <h4>Discord integration</h4>
-                <label>
-                    <input
-                            {{ if .Discord.Enabled }}
-                                checked="checked"
-                            {{ end }}
-                            type="checkbox"
-                            name="discord_enabled"
-                            value="true"
-                    />
-                    Enabled (Restart required)
-                </label>
-                 <input
-                        name="discord_admins"
-                        placeholder="Discord User IDs who can use bot commands separated by commas"
-                        value="{{.Discord.BotAdmins}}"
-                />
-                <input
-                        name="discord_token"
-                        placeholder="Token"
-                        value="{{.Discord.Token}}"
-                />
-                <input
-                        name="discord_channel_id"
-                        placeholder="Channel ID"
-                        value="{{ .Discord.ChannelID }}"
-                />
-                <fieldset class="grid">
-                    <label>
-                        <input type="checkbox" name="enable_game_created_messages" value="{{ .Discord.EnableGameCreatedMessages }}" {{ if .Discord.EnableGameCreatedMessages }} checked="checked" {{ end }} />
-                        Enable Game Create Messages
-                    </label>
-                    <label>
-                        <input type="checkbox" name="enable_new_run_messages" value="{{ .Discord.EnableNewRunMessages }}" {{ if .Discord.EnableNewRunMessages }} checked="checked" {{ end }} />
-                        Enable New Run Messages
-                    </label>
-                    <label>
-                        <input type="checkbox" name="enable_run_finish_messages" value="{{ .Discord.EnableRunFinishMessages }}" {{ if .Discord.EnableRunFinishMessages }} checked="checked" {{ end }} />
-                        Enable Run Finish Messages
-                    </label>
-                    <label>
-                        <input type="checkbox" name="enable_discord_chicken_messages" value="{{ .Discord.EnableDiscordChickenMessages }}" {{ if .Discord.EnableDiscordChickenMessages }} checked="checked" {{ end }} />
-                        Enable Chicken/Death Messages
-                    </label>
-                    <label>
-                        <input type="checkbox" name="enable_discord_error_messages" value="{{ .Discord.EnableDiscordErrorMessages }}" {{ if .Discord.EnableDiscordErrorMessages }} checked="checked" {{ end }} />
-                        Enable Error Messages
-                    </label>
-                </fieldset>
-                <h4>Telegram integration</h4>
-                <label>
-                    <input
-                            {{ if .Telegram.Enabled }}
-                                checked="checked"
-                            {{ end }}
-                            type="checkbox"
-                            name="telegram_enabled"
-                            value="true"
-                    />
-                    Enabled (Restart required)
-                </label>
-                <input
-                        name="telegram_token"
-                        placeholder="Token"
-                        value="{{.Telegram.Token}}"
-                />
-                <input
-                        name="telegram_chat_id"
-                        placeholder="Chat ID"
-                        value="{{ .Telegram.ChatID }}"
-                />
-            </fieldset>
-            <fieldset class="grid">
-                {{ if not .FirstRun }}
-                    <a href="/"><input type="button" value="Cancel" class="secondary"/></a>
-                {{ end }}
-                <input type="submit" value="Save"/>
-            </fieldset>
+        
+        <form method="post" autocomplete="off" class="wizard-form">
+            <div class="step-content">
+                <!-- Step 1: Game Paths -->
+                <div class="step-pane active" id="step-1">
+                    <div class="form-section">
+                        <h4><i class="bi bi-folder"></i> Game Installation Paths</h4>
+                        <label>
+                            Diablo II Resurrected Path
+                            <input name="d2rpath" placeholder="C:\Program Files (x86)\Diablo II Resurrected" value="{{.D2RPath}}" required/>
+                        </label>
+                        <label>
+                            Diablo II: LoD 1.13c Path (MUST BE 1.13c, otherwise it won't work)
+                            <input name="d2lodpath" placeholder="E:\games\Diablo II" value="{{.D2LoDPath}}" required/>
+                        </label>
+                        <label>
+                            Centralized Pickit Path (leave blank if you don't want to use a single location for all pickit files)
+                            <input name="centralized_pickit_path" placeholder="E:\games\mypickits" value="{{.CentralizedPickitPath}}"/>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Step 2: General Settings -->
+                <div class="step-pane" id="step-2">
+                    <div class="form-section">
+                        <h4><i class="bi bi-gear"></i> General Configuration</h4>
+                        <fieldset class="grid">
+                            <label>
+                                <input type="checkbox" name="use_custom_settings" value="true" {{ if .UseCustomSettings }}checked{{ end }}/>
+                                Use custom game settings
+                            </label>
+                            <label>
+                                <input type="checkbox" name="game_window_arrangement" value="true" {{ if .GameWindowArrangement }}checked{{ end }}/>
+                                Auto reposition game windows
+                            </label>
+                        </fieldset>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Debug Options -->
+                <div class="step-pane" id="step-3">
+                    <div class="form-section">
+                        <h4><i class="bi bi-bug"></i> Debug Settings</h4>
+                        <fieldset class="grid">
+                            <label>
+                                <input type="checkbox" name="debug_log" value="true" {{ if .Debug.Log }}checked{{ end }}/>
+                                Debug mode (better details in logs, more noise)
+                            </label>
+                            <label>
+                                <input type="checkbox" name="debug_screenshots" value="true" {{ if .Debug.Screenshots }}checked{{ end }}/>
+                                Save screenshot on error
+                            </label>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step-actions">
+                <button type="button" class="btn-wizard btn-secondary" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
+                    <i class="bi bi-arrow-left"></i> Previous
+                </button>
+                <div>
+                    {{ if not .FirstRun }}
+                        <a href="/" class="btn-wizard btn-secondary" style="text-decoration: none; margin-right: 10px;">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    {{ end }}
+                </div>
+                <button type="button" class="btn-wizard btn-primary" id="nextBtn" onclick="changeStep(1)">
+                    Next <i class="bi bi-arrow-right"></i>
+                </button>
+                <button type="submit" class="btn-wizard btn-primary" id="submitBtn" style="display: none;">
+                    <i class="bi bi-check-circle"></i> Save Settings
+                </button>
+            </div>
         </form>
     </div>
 </main>
+
+<script>
+let currentStep = 1;
+const totalSteps = 3;
+
+function showStep(step) {
+    // Hide all step panes
+    document.querySelectorAll('.step-pane').forEach(pane => {
+        pane.classList.remove('active');
+    });
+    
+    // Show current step pane
+    const currentPane = document.getElementById(`step-${step}`);
+    if (currentPane) {
+        currentPane.classList.add('active');
+    }
+    
+    // Update step navigation
+    document.querySelectorAll('.step-item').forEach((item, index) => {
+        item.classList.remove('active', 'completed');
+        if (index + 1 === step) {
+            item.classList.add('active');
+        } else if (index + 1 < step) {
+            item.classList.add('completed');
+        }
+    });
+    
+    // Update buttons
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    prevBtn.style.display = step === 1 ? 'none' : 'inline-flex';
+    nextBtn.style.display = step === totalSteps ? 'none' : 'inline-flex';
+    submitBtn.style.display = step === totalSteps ? 'inline-flex' : 'none';
+}
+
+function changeStep(direction) {
+    const newStep = currentStep + direction;
+    if (newStep >= 1 && newStep <= totalSteps) {
+        currentStep = newStep;
+        showStep(currentStep);
+    }
+}
+
+// Allow clicking on step navigation
+document.querySelectorAll('.step-item').forEach((item, index) => {
+    item.addEventListener('click', () => {
+        currentStep = index + 1;
+        showStep(currentStep);
+    });
+});
+
+// Initialize step navigation
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => showStep(1));
+} else {
+    showStep(1);
+}
+</script>
 </body>
 </html>

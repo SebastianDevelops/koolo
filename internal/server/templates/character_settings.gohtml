@@ -242,9 +242,21 @@
                             <label>
                                 Character Class
                                 <select name="characterClass">
-                                    <option value="sorceress_leveling" {{ if eq .Config.Character.Class "sorceress_leveling" }}selected{{ end }}>Sorc (Leveling as Fire)</option>
+                                    <option value="sorceress" {{ if eq .Config.Character.Class "sorceress" }}selected{{ end }}>Blizzard Sorceress</option>
+                                    <option value="nova" {{ if eq .Config.Character.Class "nova" }}selected{{ end }}>Nova Sorceress</option>
+                                    <option value="hydraorb" {{ if eq .Config.Character.Class "hydraorb" }}selected{{ end }}>Hydra Orb Sorceress</option>
+                                    <option value="lightsorc" {{ if eq .Config.Character.Class "lightsorc" }}selected{{ end }}>Lightning Sorceress</option>
+                                    <option value="fireballsorc" {{ if eq .Config.Character.Class "fireballsorc" }}selected{{ end }}>Fireball Sorceress</option>
+                                    <option value="hammerdin" {{ if eq .Config.Character.Class "hammerdin" }}selected{{ end }}>Hammer Paladin</option>
+                                    <option value="foh" {{ if eq .Config.Character.Class "foh" }}selected{{ end }}>FOH Paladin</option>
                                     <option value="paladin" {{ if eq .Config.Character.Class "paladin" }}selected{{ end }}>Paladin (Leveling)</option>
                                     <option value="assassin" {{ if eq .Config.Character.Class "assassin" }}selected{{ end }}>Assassin (Leveling)</option>
+                                    <option value="sorceress_leveling" {{ if eq .Config.Character.Class "sorceress_leveling" }}selected{{ end }}>Sorc (Leveling as Fire)</option>
+                                    <option value="trapsin" {{ if eq .Config.Character.Class "trapsin" }}selected{{ end }}>Lightning Trapsin</option>
+                                    <option value="mosaic" {{ if eq .Config.Character.Class "mosaic" }}selected{{ end }}>Mosaic Assassin</option>
+                                    <option value="winddruid" {{ if eq .Config.Character.Class "winddruid" }}selected{{ end }}>Tornado Druid</option>
+                                    <option value="javazon" {{ if eq .Config.Character.Class "javazon" }}selected{{ end }}>Javazon</option>
+                                    <option value="berserker" {{ if eq .Config.Character.Class "berserker" }}selected{{ end }}>Berserk Barbarian</option>
                                 </select>
                             </label>
                             <label>

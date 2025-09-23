@@ -58,8 +58,18 @@ func (a Leveling) act3() error {
 
 	if a.ctx.Data.Quests[quest.Act3TheGuardian].Completed() {
 
+		a.ctx.Logger.Info("Attempting to reach Act 4 via The Pandemonium Fortress waypoint.")
+		err := action.WayPoint(area.ThePandemoniumFortress)
+		if err == nil {
+			a.ctx.Logger.Info("Successfully reached Act 4 via waypoint. Ending Act 3 script.")
+			return nil
+		} else {
+			a.ctx.Logger.Info("Could not use waypoint to The Pandemonium Fortress. Falling back to manual portal entry.")
+			// The rest of the original code follows here
+		}
+
 		// Use waypoint to DuranceOfHateLevel2
-		err := action.WayPoint(area.DuranceOfHateLevel2)
+		err = action.WayPoint(area.DuranceOfHateLevel2)
 		if err != nil {
 			return err
 		}

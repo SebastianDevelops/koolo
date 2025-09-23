@@ -3,7 +3,6 @@ package run
 import (
 	"github.com/hectorgimenez/d2go/pkg/data"
 	"github.com/hectorgimenez/d2go/pkg/data/area"
-	"github.com/hectorgimenez/d2go/pkg/data/difficulty"
 	"github.com/hectorgimenez/d2go/pkg/data/item"
 	"github.com/hectorgimenez/d2go/pkg/data/npc"
 	"github.com/hectorgimenez/d2rbot/internal/action"
@@ -101,11 +100,6 @@ func (a Andariel) Run() error {
 	err := action.WayPoint(area.CatacombsLevel2)
 	if err != nil {
 		return err
-	}
-
-	a.ctx.CharacterCfg.Character.ClearPathDist = 20
-	if err := config.SaveSupervisorConfig(a.ctx.CharacterCfg.ConfigFolderName, a.ctx.CharacterCfg); err != nil {
-		a.ctx.Logger.Error("Failed to save character configuration: %s", err.Error())
 	}
 
 	err = action.MoveToArea(area.CatacombsLevel3)
@@ -212,14 +206,6 @@ func (a Andariel) Run() error {
 			a.ctx.CharacterCfg.BackToTown = originalBackToTownCfg
 			a.ctx.Logger.Info("Restored original back-to-town checks after Andariel fight.")
 		}()
-
-		if a.ctx.CharacterCfg.Game.Difficulty == difficulty.Normal {
-
-			/*	action.ClearAreaAroundPlayer(45, data.MonsterAnyFilter())
-				action.MoveToCoords(andarielAttackPos1)
-				action.ClearAreaAroundPlayer(45, data.MonsterAnyFilter())*/
-		}
-
 	}
 
 	if !a.ctx.CharacterCfg.Game.Andariel.ClearRoom {

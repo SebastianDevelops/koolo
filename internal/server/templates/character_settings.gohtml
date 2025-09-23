@@ -341,10 +341,17 @@
                                 Identify with Cain
                             </label>
                         </fieldset>
+                        <fieldset class="grid">
                         <label>
                             <input type="checkbox" name="interactWithShrines" {{ if .Config.Game.InteractWithShrines }}checked{{ end }}/>
                             Interact with shrines
                         </label>
+                        <label>
+                            Level until (put 0 for no limit)
+                            <input type="number" name="stopLevelingAt" min="0" max="99" placeholder="{{ .Config.Game.StopLevelingAt }}"
+                                value="{{ .Config.Game.StopLevelingAt }}"/>
+                        </label>
+                        </fieldset>
                         <div id="clearPathDistContainer" class="conditional-field" {{ if .Config.Character.UseTeleport }}style="display: none;"{{ end }}>
                             <div class="walking-radius-container">
                                 <label for="clearPathDist">Clear Path Radius</label>

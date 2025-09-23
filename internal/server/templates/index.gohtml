@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../assets/css/custom.css">
     <link rel="stylesheet" href="../assets/css/dashboard.css">
     <link rel="stylesheet" href="../assets/css/bootstrap-icons.css">
+    <link rel="stylesheet" href="../assets/css/guide.css">
     <title>D2RBot Dashboard</title>
        
 </head>
@@ -39,6 +40,10 @@
                 <button class="tab-btn" data-tab="settings">
                     <i class="bi bi-gear"></i>
                     <span>Settings</span>
+                </button>
+                <button class="tab-btn" data-tab="guide">
+                    <i class="bi bi-book"></i>
+                    <span>Guide</span>
                 </button>
                 <button class="tab-btn" data-tab="logs">
                     <i class="bi bi-journal-text"></i>
@@ -78,6 +83,85 @@
                 </div>
             </div>
             
+            <!-- Guide Tab -->
+            <div class="tab-pane" id="guide-tab">
+                <div class="guide-container">
+                    <div class="guide-header">
+                        <h2><i class="bi bi-book"></i> D2RBot Complete Guide</h2>
+                        <div class="guide-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="guide-progress"></div>
+                            </div>
+                            <span class="progress-text">Progress: <span id="progress-percent">0%</span></span>
+                        </div>
+                    </div>
+                    
+                    <div class="guide-navigation">
+                        <div class="guide-sections">
+                            <div class="section-card" data-section="getting-started">
+                                <div class="section-icon">🚀</div>
+                                <h3>Getting Started</h3>
+                                <p>Installation and initial setup</p>
+                                <div class="section-status"><i class="bi bi-circle"></i></div>
+                            </div>
+                            <div class="section-card" data-section="single-player">
+                                <div class="section-icon">👤</div>
+                                <h3>Single Player Setup</h3>
+                                <p>Configure for offline play</p>
+                                <div class="section-status"><i class="bi bi-circle"></i></div>
+                            </div>
+                            <div class="section-card" data-section="online-setup">
+                                <div class="section-icon">🌐</div>
+                                <h3>Online Setup</h3>
+                                <p>Battle.net configuration</p>
+                                <div class="section-status"><i class="bi bi-circle"></i></div>
+                            </div>
+                            <div class="section-card" data-section="character-setup">
+                                <div class="section-icon">⚔️</div>
+                                <h3>Character Setup</h3>
+                                <p>Configure runs and settings</p>
+                                <div class="section-status"><i class="bi bi-circle"></i></div>
+                            </div>
+                            <div class="section-card" data-section="pickit-guide">
+                                <div class="section-icon">💎</div>
+                                <h3>Pickit System</h3>
+                                <p>Item filtering and pickup rules</p>
+                                <div class="section-status"><i class="bi bi-circle"></i></div>
+                            </div>
+                            <div class="section-card" data-section="advanced-features">
+                                <div class="section-icon">🔧</div>
+                                <h3>Advanced Features</h3>
+                                <p>Companion mode, scheduler, gambling</p>
+                                <div class="section-status"><i class="bi bi-circle"></i></div>
+                            </div>
+                            <div class="section-card" data-section="troubleshooting">
+                                <div class="section-icon">🔧</div>
+                                <h3>Troubleshooting</h3>
+                                <p>Common issues and solutions</p>
+                                <div class="section-status"><i class="bi bi-circle"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="guide-content" id="guide-content">
+                        <div class="welcome-screen">
+                            <div class="welcome-icon">📚</div>
+                            <h2>Welcome to the D2RBot Guide!</h2>
+                            <p>Select a section from above to begin your journey. Complete each section to track your progress.</p>
+                            <div class="quick-start">
+                                <h3>Quick Start Checklist:</h3>
+                                <ul class="checklist">
+                                    <li><input type="checkbox" id="check-d2r"> <label for="check-d2r">Diablo II: Resurrected installed</label></li>
+                                    <li><input type="checkbox" id="check-d2lod"> <label for="check-d2lod">Diablo II: LOD 1.13c installed</label></li>
+                                    <li><input type="checkbox" id="check-resolution"> <label for="check-resolution">Game set to 1280x720 windowed</label></li>
+                                    <li><input type="checkbox" id="check-english"> <label for="check-english">Game language set to English</label></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <!-- Logs Tab -->
             <div class="tab-pane" id="logs-tab">
                 <div class="logs-container">
@@ -107,5 +191,6 @@
     </div>
 </main>
 <script src="../assets/js/dashboard.js"></script>
+<script src="../assets/js/guide.js"></script>
 </body>
 </html>

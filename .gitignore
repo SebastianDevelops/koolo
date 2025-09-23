@@ -11,3 +11,15 @@
 !/config/template
 !/config/koolo.yaml.dist
 !/config/Settings.json
+
+# Ignore D2 LOD files
+/cmd/d2rbot/d2lod/*
+!/cmd/d2rbot/d2lod/README.md
+
+# Ignore installer files
+/d2rbot-installer.exe
+/cmd/installer/d2lod.zip
+/cmd/installer/d2rbot.exe
+/cmd/installer/tools/
+/cmd/installer/config/
+/cmd/installer/README.md

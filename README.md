@@ -183,6 +183,252 @@ After creating a character, you'll see the main dashboard with:
 - **Auto-Selling**: Sells unwanted items to vendors
 - **Inventory Locking**: Protects specific inventory slots
 
+## Pickit Configuration Guide
+
+### Understanding Pickit Files
+
+D2RBot uses **NIP (Notpad Item Pickup)** files to determine which items to pick up during farming runs. These files contain rules written in a specific syntax that tells the bot exactly what items are valuable.
+
+### Pickit Directory Structure
+
+```
+config/[character_name]/
+├── pickit/                    # Main pickit rules (always active)
+│   ├── crafted.nip           # Crafted items
+│   ├── magic.nip             # Magic items
+│   ├── misc.nip              # Miscellaneous items
+│   ├── rare.nip              # Rare items
+│   ├── set.nip               # Set items
+│   ├── unid.nip              # Unidentified items
+│   ├── unique.nip            # Unique items
+│   └── white.nip             # White/normal items
+└── pickit_leveling/           # Leveling-specific rules (leveling run only)
+    ├── assassin.nip          # Assassin leveling items
+    ├── leveling.nip          # General leveling items
+    ├── paladin.nip           # Paladin leveling items
+    ├── quest.nip             # Quest items
+    └── sorceress_leveling.nip # Sorceress leveling items
+```
+
+### How Pickit Rules Work
+
+#### Basic Syntax
+```
+[property] == value && [property2] >= value2 # [stat] >= value3 # comment
+```
+
+#### Rule Components:
+1. **Item Properties**: `[name]`, `[type]`, `[quality]`, `[class]`
+2. **Conditions**: `==` (equals), `>=` (greater/equal), `<=` (less/equal), `!=` (not equal)
+3. **Stats**: `# [stat] >= value` (item must have this stat)
+4. **Comments**: `// comment` (explanatory text)
+5. **Max Quantity**: `# [maxquantity] == X` (limit pickup amount)
+
+### Pickit Rule Examples
+
+#### Unique Items
+```nip
+// Pick up Stone of Jordan rings
+[type] == ring && [quality] == unique # [itemmaxmanapercent] >= 25
+
+// Pick up Shako (Harlequin Crest)
+[name] == shako && [quality] == unique && [flag] != ethereal # [defense] >= 141
+
+// Pick up perfect Mara's Kaleidoscope
+[type] == amulet && [quality] == unique # [itemallskills] == 2 && [fireresist] >= 30
+```
+
+#### Runes
+```nip
+// Pick up high runes
+[name] == lemrune
+[name] == pulrune
+[name] == umrune
+[name] == malrune
+[name] == istrune
+[name] == gulrune
+[name] == vexrune
+[name] == ohmrune
+[name] == lorune
+[name] == surrune
+[name] == berrune
+[name] == jahrune
+[name] == chamrune
+[name] == zodrune
+
+// Pick up specific quantities of mid runes
+[name] == helrune # # [maxquantity] == 5
+[name] == korune # # [maxquantity] == 2
+```
+
+#### Bases for Runewords
+```nip
+// Spirit sword bases (Crystal Sword/Broad Sword with 4 sockets)
+([Name] == CrystalSword || [Name] == BroadSword) && [Quality] <= Superior && [Flag] != Ethereal # [Sockets] == 4 # [MaxQuantity] == 1
+
+// Call to Arms base (Flail with 5 sockets)
+[Name] == Flail && [Quality] <= Superior && [Flag] != Ethereal # [Sockets] == 5 # [MaxQuantity] == 1
+
+// Insight bases (4-socket polearms)
+[type] == polearm && [quality] <= superior # [sockets] == 4 # [MaxQuantity] == 1
+
+// Spirit shield base (Monarch with 4 sockets)
+[name] == monarch && [quality] <= superior # [sockets] == 4 # [maxquantity] == 1
+```
+
+### Centralized vs Local Pickit
+
+#### Local Pickit (Default)
+- Each character has its own pickit folder
+- Located in `config/[character_name]/pickit/`
+- Allows character-specific item filtering
+- Each character manages its own pickup rules independently
+
+#### Centralized Pickit (Optional)
+**Purpose**: Allows all characters to share the same pickit rules from a single location.
+
+**Setup Process**:
+1. **Set Centralized Path**: In D2RBot main settings, configure "Centralized Pickit Path" (e.g., `C:\D2RBot\shared_pickit\`)
+2. **Enable Per Character**: Check "Use Centralized Pickit" in each character's settings
+3. **Create Shared Folder**: Place your pickit files in the centralized directory
+
+**Benefits**: 
+- **Single Management Point**: Update pickit rules once, applies to all characters
+- **Consistency**: All characters use identical item filtering
+- **Easier Maintenance**: No need to duplicate pickit files across characters
+- **Efficiency**: Modify pickup rules in one location
+
+**How It Works**:
+- When enabled, bot ignores local `config/[character]/pickit/` folder
+- Uses files from the centralized pickit path instead
+- Leveling pickit still works from `pickit_leveling/` subfolder
+- Perfect for running multiple characters with similar item priorities
+
+**Example Structure**:
+```
+C:\D2RBot\shared_pickit\
+├── unique.nip           # Shared unique item rules
+├── rare.nip             # Shared rare item rules
+├── runes.nip            # Shared rune pickup rules
+├── crafted.nip          # Shared crafted item rules
+└── pickit_leveling/     # Leveling-specific rules
+    ├── leveling.nip
+    └── quest.nip
+```
+
+**When to Use Centralized Pickit**:
+- Running multiple characters with similar goals (MF, rune farming, etc.)
+- Want consistent item filtering across all characters
+- Prefer managing pickup rules in one location
+- Running companion setups where all characters should pick up same items
+
+**When to Use Local Pickit**:
+- Different characters have different purposes (MF sorc vs Rune barb)
+- Want character-specific item filtering
+- Prefer isolated pickit management per character
+- Testing different pickup strategies
+
+### Leveling Pickit System
+
+When running the **"leveling"** run, D2RBot automatically includes additional pickit rules:
+
+1. **Class-specific files**: `assassin.nip`, `paladin.nip`, `sorceress_leveling.nip`
+2. **General leveling**: `leveling.nip` (if no class-specific file exists)
+3. **Quest items**: `quest.nip` (always included)
+4. **Priority**: Class-specific > General leveling > Quest items
+
+### Common Item Properties
+
+#### Quality Types
+- `inferior` - Inferior items
+- `normal` - Normal items
+- `superior` - Superior items
+- `magic` - Magic (blue) items
+- `set` - Set (green) items
+- `rare` - Rare (yellow) items
+- `unique` - Unique (gold) items
+- `crafted` - Crafted items
+
+#### Item Classes
+- `normal` - Normal difficulty items
+- `exceptional` - Nightmare difficulty items
+- `elite` - Hell difficulty items
+
+#### Flags
+- `ethereal` - Ethereal items
+- `identified` - Identified items
+- `socketed` - Items with sockets
+
+### Advanced Pickit Tips
+
+#### 1. Commenting Out Rules
+```nip
+// This rule is disabled
+//[name] == shako && [quality] == unique
+
+// This rule is active
+[name] == shako && [quality] == unique
+```
+
+#### 2. Multiple Conditions
+```nip
+// Must meet ALL conditions (AND)
+[type] == ring && [quality] == rare && [strength] >= 10 && [dexterity] >= 10
+
+// Must meet ANY condition (OR)
+([name] == CrystalSword || [name] == BroadSword) && [sockets] == 4
+```
+
+#### 3. Stat Requirements
+```nip
+// Item must have specific stats
+[type] == amulet && [quality] == rare # [itemallskills] >= 2 && [strength] >= 20
+
+// Multiple stat requirements
+[type] == ring && [quality] == rare # [lifeleech] >= 5 && [manaleech] >= 5 && [tohit] >= 100
+```
+
+### Troubleshooting Pickit Issues
+
+#### Items Not Being Picked Up
+1. **Check file syntax**: Ensure proper NIP syntax
+2. **Verify file location**: Must be in correct pickit directory
+3. **Check inventory space**: Bot won't pick up if inventory is full
+4. **Review item properties**: Use in-game item stats to write accurate rules
+5. **Test with simple rules**: Start with basic rules like `[name] == itemname`
+
+#### Too Many Items Being Picked Up
+1. **Add stat requirements**: Make rules more specific
+2. **Use maxquantity limits**: Prevent picking up too many of same item
+3. **Comment out broad rules**: Disable overly general pickup rules
+
+### Creating Custom Pickit Rules
+
+1. **Identify the item**: Note exact name, type, and desired stats
+2. **Write the rule**: Use proper NIP syntax
+3. **Test the rule**: Run bot and verify pickup behavior
+4. **Refine as needed**: Adjust conditions and stat requirements
+
+### Example Character-Specific Pickits
+
+#### Sorceress MF Build
+```nip
+// Focus on +skills and resistances
+[type] == amulet && [quality] == rare # [itemallskills] >= 2
+[type] == ring && [quality] == rare # [coldresist]+[fireresist]+[lightresist] >= 60
+[name] == ormus && [quality] == unique # [passivecoldmastery] >= 15
+```
+
+#### Paladin Hammerdin
+```nip
+// Focus on +paladin skills and FCR
+[type] == amulet && [quality] == rare # [itemaddpaladinskills] >= 2
+[type] == ring && [quality] == rare # [fastercastrate] >= 10
+[name] == hoto && [quality] == unique # [itemallskills] >= 3
+```
+
+This pickit system gives you complete control over what items D2RBot collects, allowing you to optimize farming efficiency for your specific goals and character builds.
+
 ### Companion Mode
 1. **Enable Companion System** in Step 3
 2. **Set one character as Leader**
@@ -249,9 +495,11 @@ After creating a character, you'll see the main dashboard with:
 - **Ensure TP tome is bound to hotkey**
 
 #### "Items not being picked up"
-- **Check pickit files** in config folder
-- **Verify inventory space**
-- **Check item filtering settings**
+- **Check pickit files** in config folder - ensure proper NIP syntax
+- **Verify inventory space** - bot won't pick up if inventory is full
+- **Check item filtering settings** - review pickit rules for accuracy
+- **Test with simple rules** - start with basic `[name] == itemname` rules
+- **Verify file location** - must be in correct character's pickit directory
 
 ### Performance Tips
 1. **Close unnecessary programs**

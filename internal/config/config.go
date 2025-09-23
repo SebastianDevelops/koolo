@@ -27,6 +27,7 @@ var (
 	D2RBot     *D2RBotCfg
 	Characters map[string]*CharacterCfg
 	Version    = "dev"
+	embeddedD2LODPath string
 )
 
 type D2RBotCfg struct {
@@ -329,6 +330,16 @@ func Load() error {
 		return fmt.Errorf("error reading config %s: %w", d2rbotPath, err)
 	}
 
+	// Use installed D2LOD path if available
+	if embeddedD2LODPath != "" {
+		D2RBot.D2LoDPath = embeddedD2LODPath
+	} else {
+		// Auto-detect installed D2LOD path
+		if installedPath := findInstalledD2LOD(); installedPath != "" {
+			D2RBot.D2LoDPath = installedPath
+		}
+	}
+
 	configDir := getAbsPath("config")
 	entries, err := os.ReadDir(configDir)
 	if err != nil {
@@ -480,12 +491,41 @@ func CreateFromTemplate(name string) error {
 	return Load()
 }
 
+func SetD2LODPath(path string) {
+	embeddedD2LODPath = path
+	if D2RBot != nil {
+		D2RBot.D2LoDPath = path
+	}
+}
+
+func findInstalledD2LOD() string {
+	// Check common installation paths
+	commonPaths := []string{
+		filepath.Join(os.Getenv("PROGRAMFILES"), "D2RBot", "d2lod"),
+		filepath.Join(os.Getenv("PROGRAMFILES(X86)"), "D2RBot", "d2lod"),
+		"./d2lod",
+	}
+	
+	for _, path := range commonPaths {
+		if _, err := os.Stat(filepath.Join(path, "d2data.mpq")); err == nil {
+			return path
+		}
+	}
+	
+	return ""
+}
+
 func ValidateAndSaveConfig(config D2RBotCfg) error {
 	config.D2LoDPath = strings.ReplaceAll(strings.ToLower(config.D2LoDPath), "game.exe", "")
 	config.D2RPath = strings.ReplaceAll(strings.ToLower(config.D2RPath), "d2r.exe", "")
 
-	if _, err := os.Stat(config.D2LoDPath + "/d2data.mpq"); os.IsNotExist(err) {
-		return errors.New("D2LoDPath is not valid")
+	// Skip D2LOD validation if using embedded path
+	if embeddedD2LODPath == "" {
+		if _, err := os.Stat(config.D2LoDPath + "/d2data.mpq"); os.IsNotExist(err) {
+			return errors.New("D2LoDPath is not valid")
+		}
+	} else {
+		config.D2LoDPath = embeddedD2LODPath
 	}
 
 	if _, err := os.Stat(config.D2RPath + "/d2r.exe"); os.IsNotExist(err) {

@@ -616,32 +616,20 @@ func (a Quests) killIzualQuest() error {
 	timeout := time.Minute * 10
 	a.ctx.Logger.Info("Searching for Izual...")
 
-	for {
-		// Check if the timeout has been exceeded on each loop
-		if time.Since(startTime) > timeout {
-			return fmt.Errorf("timeout: failed to find Izual within %v", timeout)
-		}
-
-		// Try to find Izual in the current game data
-		_, found := a.ctx.Data.NPCs.FindOne(npc.Izual)
-		if found {
-			a.ctx.Logger.Info("Izual is nearby, proceeding to engage.")
-			break // Exit the search loop
-		}
-
-		// Wait for a couple of seconds before checking again.
-		// This allows the bot time to move and explore the area.
-		time.Sleep(time.Second * 2)
+	// Check if the timeout has been exceeded on each loop
+	if time.Since(startTime) > timeout {
+		return fmt.Errorf("timeout: failed to find Izual within %v", timeout)
 	}
 
 	// Once Izual is found, move to him
 	err = action.MoveTo(func() (data.Position, bool) {
-		izual, found := a.ctx.Data.NPCs.FindOne(npc.Izual)
+		areaData := a.ctx.Data.Areas[area.PlainsOfDespair]
+		izualNPC, found := areaData.NPCs.FindOne(npc.Izual)
 		if !found {
 			return data.Position{}, false
 		}
 
-		return izual.Positions[0], true
+		return izualNPC.Positions[0], true
 	})
 	if err != nil {
 		return err

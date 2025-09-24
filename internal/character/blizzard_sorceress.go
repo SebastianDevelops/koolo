@@ -12,13 +12,13 @@ import (
 	"github.com/hectorgimenez/d2go/pkg/data/skill"
 	"github.com/hectorgimenez/d2go/pkg/data/stat"
 	"github.com/hectorgimenez/d2go/pkg/data/state"
+	"github.com/hectorgimenez/d2rbot/internal/action"
 	"github.com/hectorgimenez/d2rbot/internal/action/step"
 	"github.com/hectorgimenez/d2rbot/internal/context"
 	"github.com/hectorgimenez/d2rbot/internal/game"
 	"github.com/hectorgimenez/d2rbot/internal/health"
 	"github.com/hectorgimenez/d2rbot/internal/pather"
 	"github.com/hectorgimenez/d2rbot/internal/utils"
-	"github.com/hectorgimenez/koolo/internal/action"
 )
 
 const (

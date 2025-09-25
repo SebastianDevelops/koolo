@@ -68,11 +68,6 @@ class GuideManager {
                 title: '🚀 Getting Started',
                 content: `
                     <h2>Getting Started with D2RBot</h2>
-                    
-                    <div class="warning-box">
-                        <h4><i class="bi bi-exclamation-triangle"></i> Important Disclaimer</h4>
-                        <p>Using automation tools may result in account bans. Use at your own risk. This tool is for educational purposes only.</p>
-                    </div>
 
                     <div class="step-indicator">
                         <div class="step-number">1</div>
@@ -85,7 +80,6 @@ class GuideManager {
                     <h3>Essential Requirements</h3>
                     <ul>
                         <li><strong>Diablo II: Resurrected</strong> - Latest version</li>
-                        <li><strong>Diablo II: Lord of Destruction 1.13c</strong> - CRITICAL: D2RBot will not work without this</li>
                         <li><strong>Windows Operating System</strong> - Windows 10/11 recommended</li>
                     </ul>
 
@@ -106,16 +100,8 @@ class GuideManager {
                     </div>
 
                     <ol>
-                        <li>Install Diablo II: LOD 1.13c (if not already installed)</li>
-                        <li>Download D2RBot from the releases section</li>
-                        <li>Extract the zip file to a folder of your choice</li>
                         <li>Run <code>d2rbot.exe</code> to start the application</li>
                     </ol>
-
-                    <div class="tip-box">
-                        <h4><i class="bi bi-lightbulb"></i> Pro Tip</h4>
-                        <p>Create a dedicated folder for D2RBot (e.g., C:\\D2RBot) to keep everything organized.</p>
-                    </div>
                 `
             },
             'single-player': {
@@ -278,7 +264,7 @@ class GuideManager {
                     <ol>
                         <li>Go to character settings</li>
                         <li>Navigate to Step 5 - Runs & Automation</li>
-                        <li>Drag and drop runs between Enabled/Disabled lists</li>
+                        <li>Configure runs between Enabled/Disabled lists</li>
                         <li>Configure run-specific settings by clicking on each run</li>
                         <li>Enable "Randomize run order" for variety</li>
                     </ol>

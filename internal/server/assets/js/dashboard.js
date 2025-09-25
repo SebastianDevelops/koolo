@@ -45,10 +45,15 @@ let socket;
         }
 
         const container = document.getElementById('characters-container');
+        const summaryContainer = document.getElementById('character-summary');
+        
         if (!container) return;
 
         if (Object.keys(data.Status).length === 0) {
             container.innerHTML = '<article><p>No characters found, start adding a new character.</p></article>';
+            if (summaryContainer) {
+                summaryContainer.innerHTML = '<article><p>No characters found, start adding a new character.</p></article>';
+            }
             return;
         }
 
@@ -59,6 +64,16 @@ let socket;
                 container.appendChild(card);
             }
             updateCharacterCard(card, key, value, data.DropCount[key]);
+            
+            // Also update characters tab
+            if (summaryContainer) {
+                let summaryCard = document.getElementById(`summary-${key}`);
+                if (!summaryCard) {
+                    summaryCard = createCharacterSummaryCard(key);
+                    summaryContainer.appendChild(summaryCard);
+                }
+                updateCharacterSummaryCard(summaryCard, key, value, data.DropCount[key]);
+            }
         }
 
         // Remove cards for characters that no longer exist
@@ -67,6 +82,14 @@ let socket;
                 container.removeChild(card);
             }
         });
+        
+        if (summaryContainer) {
+            Array.from(summaryContainer.children).forEach(card => {
+                if (!data.Status.hasOwnProperty(card.id.replace('summary-', ''))) {
+                    summaryContainer.removeChild(card);
+                }
+            });
+        }
     }
 
 
@@ -914,6 +937,57 @@ function updateButtons(startPauseBtn, stopBtn, attachBtn, status) {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    function createCharacterSummaryCard(key) {
+        const card = document.createElement('div');
+        card.className = 'character-summary-card';
+        card.id = `summary-${key}`;
+
+        card.innerHTML = `
+            <div class="summary-header">
+                <h3>${key}</h3>
+                <div class="summary-status"></div>
+            </div>
+            <div class="summary-stats">
+                <div class="summary-stat">
+                    <span class="stat-label">Games:</span>
+                    <span class="stat-value runs">0</span>
+                </div>
+                <div class="summary-stat">
+                    <span class="stat-label">Status:</span>
+                    <span class="stat-value status">Not Started</span>
+                </div>
+            </div>
+            <div class="summary-actions">
+                <button class="btn btn-outline" onclick="location.href='/supervisorSettings?supervisor=${key}'">
+                    <i class="bi bi-gear"></i> Settings
+                </button>
+            </div>
+        `;
+
+        return card;
+    }
+
+    function updateCharacterSummaryCard(card, key, value, dropCount) {
+        if (!card) return;
+
+        const statusElement = card.querySelector('.summary-status');
+        const runsElement = card.querySelector('.runs');
+        const statusTextElement = card.querySelector('.status');
+
+        if (statusElement) {
+            statusElement.className = `summary-status status-${value.SupervisorStatus.toLowerCase().replace(' ', '')}`;
+        }
+
+        if (runsElement) {
+            const stats = calculateStats(value.Games);
+            runsElement.textContent = stats.totalGames;
+        }
+
+        if (statusTextElement) {
+            statusTextElement.textContent = value.SupervisorStatus || 'Not Started';
+        }
     }
 
     document.addEventListener('DOMContentLoaded', function() {

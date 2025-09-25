@@ -186,6 +186,200 @@
             border-radius: 4px;
             cursor: pointer;
         }
+        
+        /* Modern Runs Selection Interface */
+        .runs-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .runs-search-input {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--card-background-color);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn, .action-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn.active, .action-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .run-category {
+            margin-bottom: 30px;
+        }
+        
+        .category-title {
+            color: var(--primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .run-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .run-card {
+            background: var(--card-background-color);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .run-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .run-card.enabled {
+            border-color: #28a745;
+            background: linear-gradient(135deg, var(--card-background-color) 0%, rgba(40, 167, 69, 0.1) 100%);
+        }
+        
+        .run-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .run-info h6 {
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0 0 4px 0;
+        }
+        
+        .run-info p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin: 0 0 6px 0;
+        }
+        
+        .run-difficulty {
+            font-size: 0.8rem;
+            color: #ffc107;
+        }
+        
+        .run-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .run-info-icon {
+            color: var(--text-secondary);
+            cursor: help;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .run-info-icon:hover {
+            color: var(--primary);
+        }
+        
+        .run-checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+        }
+        
+        /* Tooltip styles */
+        [data-tooltip] {
+            position: relative;
+        }
+        
+        [data-tooltip]:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            max-width: 300px;
+            white-space: normal;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        [data-tooltip]:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 115%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #333;
+            z-index: 1000;
+        }
+        
+        .runs-summary {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px 20px;
+            border: 1px solid var(--border-color);
+            margin-top: 20px;
+        }
+        
+        .summary-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .enabled-count {
+            color: var(--primary);
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -625,47 +819,277 @@
                 <div class="step-pane" id="step-5">
                     <div class="form-section">
                         <h4><i class="bi bi-play-circle"></i> Run Configuration</h4>
-                        <p>Choose the runs that you want the bot to run. You can either drag & drop runs below to enable or disable them, or use the + - buttons. Click on any of the runs to expand them and see more details and options.</p>
-                        <label>
-                            <input type="checkbox" name="gameRandomizeRuns" {{ if .Config.Game.RandomizeRuns }}checked{{ end }}/>
-                            Randomize run order
-                        </label>
-                        <input type="hidden" id="gameRuns" name="gameRuns" value="">
-                        <div class="grid">
-                            <div>
-                                <h6>Enabled Runs:</h6>
-                                <ul style="padding-top: 52px" class="run-list" id="enabled_runs">
-                                    {{ range $index, $run := .EnabledRuns }}
-                                        <li value="{{ $run }}">
-                                            <details>
-                                                <summary role="button" class="outline secondary">
-                                                    <span>{{ $run }}</span>
-                                                    <button type="button" class="remove-run" title="Remove run"><i class="bi bi-dash"></i></button>
-                                                </summary>
-                                                {{ executeTemplateByName $run $topLevelContext }}
-                                            </details>
-                                        </li>
-                                    {{ end }}
-                                </ul>
+                        <p>Select the farming runs you want to enable. Click on any run card to toggle it on/off and hover over the info icon for prerequisites.</p>
+                        
+                        <div class="runs-controls">
+                            <div class="runs-search">
+                                <input type="text" id="runs-search" placeholder="🔍 Search runs..." class="runs-search-input">
                             </div>
-                            <div>
-                                <h6>Disabled Runs:</h6>
-                                <input type="text" id="search-disabled-runs" placeholder="Search runs...">
-                                <ul class="run-list" id="disabled_runs">
-                                    {{ range $index, $run := .DisabledRuns }}
-                                        <li value="{{ $run }}">
-                                            <details>
-                                                <summary role="button" class="outline secondary">
-                                                    <span>{{ $run }}</span>
-                                                    <button type="button" class="add-run" title="Add run"><i class="bi bi-plus"></i></button>
-                                                </summary>
-                                                {{ executeTemplateByName $run $topLevelContext }}
-                                            </details>
-                                        </li>
-                                    {{ end }}
-                                </ul>
+                            <div class="runs-filters">
+                                <button type="button" class="filter-btn active" data-filter="all">All</button>
+                                <button type="button" class="filter-btn" data-filter="bosses">Bosses</button>
+                                <button type="button" class="filter-btn" data-filter="areas">Areas</button>
+                                <button type="button" class="filter-btn" data-filter="special">Special</button>
+                                <button type="button" class="filter-btn" data-filter="enabled">Enabled Only</button>
+                            </div>
+                            <div class="runs-actions">
+                                <button type="button" class="action-btn" id="select-all-runs">Select All</button>
+                                <button type="button" class="action-btn" id="clear-all-runs">Clear All</button>
                             </div>
                         </div>
+                        
+                        <div class="runs-grid" id="runs-grid">
+                            <!-- Boss Runs -->
+                            <div class="run-category" data-category="bosses">
+                                <h5 class="category-title"><i class="bi bi-person-fill"></i> Boss Runs</h5>
+                                <div class="run-cards">
+                                    <div class="run-card" data-run="countess" data-category="bosses">
+                                        <div class="run-icon">👑</div>
+                                        <div class="run-info">
+                                            <h6>Countess</h6>
+                                            <p>Runes & Keys</p>
+                                            <div class="run-difficulty">⭐⭐</div>
+                                        </div>
+                                        <div class="run-actions">
+                                            <i class="bi bi-info-circle run-info-icon" data-tooltip="Prerequisites: Access to Black Marsh waypoint. Recommended: Level 15+. Drops: Low-mid runes (El-Ist), Key of Terror"></i>
+                                            <input type="checkbox" class="run-checkbox" data-run="countess">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="run-card" data-run="andariel" data-category="bosses">
+                                        <div class="run-icon">🕷️</div>
+                                        <div class="run-info">
+                                            <h6>Andariel</h6>
+                                            <p>Unique Items</p>
+                                            <div class="run-difficulty">⭐⭐</div>
+                                        </div>
+                                        <div class="run-actions">
+                                            <i class="bi bi-info-circle run-info-icon" data-tooltip="Prerequisites: Completed Den of Evil quest. Recommended: Level 20+. Drops: Unique items, gems, good magic find target"></i>
+                                            <input type="checkbox" class="run-checkbox" data-run="andariel">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="run-card" data-run="mephisto" data-category="bosses">
+                                        <div class="run-icon">😈</div>
+                                        <div class="run-info">
+                                            <h6>Mephisto</h6>
+                                            <p>Magic Find</p>
+                                            <div class="run-difficulty">⭐⭐⭐</div>
+                                        </div>
+                                        <div class="run-actions">
+                                            <i class="bi bi-info-circle run-info-icon" data-tooltip="Prerequisites: Access to Durance of Hate Level 2 waypoint. Recommended: Level 25+, cold resistance. Excellent magic find target"></i>
+                                            <input type="checkbox" class="run-checkbox" data-run="mephisto">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="run-card" data-run="diablo" data-category="bosses">
+                                        <div class="run-icon">👹</div>
+                                        <div class="run-info">
+                                            <h6>Diablo</h6>
+                                            <p>High-End Items</p>
+                                            <div class="run-difficulty">⭐⭐⭐⭐</div>
+                                        </div>
+                                        <div class="run-actions">
+                                            <i class="bi bi-info-circle run-info-icon" data-tooltip="Prerequisites: Completed Act 4. Recommended: Level 30+, good resistances. Drops: High-level unique items, charms"></i>
+                                            <input type="checkbox" class="run-checkbox" data-run="diablo">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="run-card" data-run="baal" data-category="bosses">
+                                        <div class="run-icon">💀</div>
+                                        <div class="run-info">
+                                            <h6>Baal</h6>
+                                            <p>Experience & Items</p>
+                                            <div class="run-difficulty">⭐⭐⭐⭐⭐</div>
+                                        </div>
+                                        <div class="run-actions">
+                                            <i class="bi bi-info-circle run-info-icon" data-tooltip="Prerequisites: Completed Act 5. Recommended: Level 35+, maxed resistances. Best experience and high-level items"></i>
+                                            <input type="checkbox" class="run-checkbox" data-run="baal">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="run-card" data-run="pindleskin" data-category="bosses">
+                                        <div class="run-icon">🧟</div>
+                                        <div class="run-info">
+                                            <h6>Pindleskin</h6>
+                                            <p>Quick MF</p>
+                                            <div class="run-difficulty">⭐⭐⭐</div>
+                                        </div>
+                                        <div class="run-actions">
+                                            <i class="bi bi-info-circle run-info-icon" data-tooltip="Prerequisites: Completed Anya rescue quest. Very fast runs, can drop any item in game except Tyrael's Might"></i>
+                                            <input type="checkbox" class="run-checkbox" data-run="pindleskin">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="run-card" data-run="nihlathak" data-category="bosses">
+                                        <div class="run-icon">🧙</div>
+                                        <div class="run-info">
+                                            <h6>Nihlathak</h6>
+                                            <p>Keys & Items</p>
+                                            <div class="run-difficulty">⭐⭐⭐⭐</div>
+                                        </div>
+                                        <div class="run-actions">
+                                            <i class="bi bi-info-circle run-info-icon" data-tooltip="Prerequisites: Completed Betrayal of Harrogath quest. Drops: Key of Destruction, high-level items. Beware of Corpse Explosion"></i>
+                                            <input type="checkbox" class="run-checkbox" data-run="nihlathak">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="run-card" data-run="eldritch" data-category="bosses">
+                                        <div class="run-icon">❄️</div>
+                                        <div class="run-info">
+                                            <h6>Eldritch</h6>
+                                            <p>Quick Runs</p>
+                                            <div class="run-difficulty">⭐⭐</div>
+                                        </div>
+                                        <div class="run-actions">
+                                            <i class="bi bi-info-circle run-info-icon" data-tooltip="Prerequisites: Access to Frigid Highlands waypoint. Very quick runs, good for experience and items"></i>
+                                            <input type="checkbox" class="run-checkbox" data-run="eldritch">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Area Runs -->
+                            <div class="run-category" data-category="areas">
+                                <h5 class="category-title"><i class="bi bi-map"></i> Area Runs</h5>
+                                <div class="run-cards">
+                                    <div class="run-card" data-run="ancient_tunnels" data-category="areas">
+                                        <div class="run-icon">🏛️</div>
+                                        <div class="run-info">
+                                            <h6>Ancient Tunnels</h6>
+                                            <p>No Immunities</p>
+                                            <div class="run-difficulty">⭐⭐⭐</div>
+                                        </div>
+                                        <div class="run-actions">
+                                            <i class="bi bi-info-circle run-info-icon" data-tooltip="Prerequisites: Access to Lost City waypoint. Level 85 area with no cold/lightning immunes. Perfect for sorceresses"></i>
+                                            <input type="checkbox" class="run-checkbox" data-run="ancient_tunnels">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="run-card" data-run="pit" data-category="areas">
+                                        <div class="run-icon">🕳️</div>
+                                        <div class="run-info">
+                                            <h6>The Pit</h6>
+                                            <p>High Level Area</p>
+                                            <div class="run-difficulty">⭐⭐⭐</div>
+                                        </div>
+                                        <div class="run-actions">
+                                            <i class="bi bi-info-circle run-info-icon" data-tooltip="Prerequisites: Access to Outer Cloister waypoint. Level 85 area, can drop any item. Good for all character types"></i>
+                                            <input type="checkbox" class="run-checkbox" data-run="pit">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="run-card" data-run="travincal" data-category="areas">
+                                        <div class="run-icon">🏛️</div>
+                                        <div class="run-info">
+                                            <h6>Travincal</h6>
+                                            <p>High Runes</p>
+                                            <div class="run-difficulty">⭐⭐⭐⭐</div>
+                                        </div>
+                                        <div class="run-actions">
+                                            <i class="bi bi-info-circle run-info-icon" data-tooltip="Prerequisites: Access to Travincal waypoint. Council members have high rune drop rates. Recommended: Find Item skill for Barbarians"></i>
+                                            <input type="checkbox" class="run-checkbox" data-run="travincal">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="run-card" data-run="lower_kurast" data-category="areas">
+                                        <div class="run-icon">🌴</div>
+                                        <div class="run-info">
+                                            <h6>Lower Kurast</h6>
+                                            <p>Rune Farming</p>
+                                            <div class="run-difficulty">⭐⭐⭐</div>
+                                        </div>
+                                        <div class="run-actions">
+                                            <i class="bi bi-info-circle run-info-icon" data-tooltip="Prerequisites: Access to Lower Kurast waypoint. Super chests can drop high runes. Best in single player with high player count"></i>
+                                            <input type="checkbox" class="run-checkbox" data-run="lower_kurast">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="run-card" data-run="mausoleum" data-category="areas">
+                                        <div class="run-icon">⚰️</div>
+                                        <div class="run-info">
+                                            <h6>Mausoleum</h6>
+                                            <p>Safe Farming</p>
+                                            <div class="run-difficulty">⭐⭐</div>
+                                        </div>
+                                        <div class="run-actions">
+                                            <i class="bi bi-info-circle run-info-icon" data-tooltip="Prerequisites: Access to Burial Grounds waypoint. Level 85 area with no immunities. Safe for all builds"></i>
+                                            <input type="checkbox" class="run-checkbox" data-run="mausoleum">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Special Runs -->
+                            <div class="run-category" data-category="special">
+                                <h5 class="category-title"><i class="bi bi-star"></i> Special Runs</h5>
+                                <div class="run-cards">
+                                    <div class="run-card" data-run="cows" data-category="special">
+                                        <div class="run-icon">🐄</div>
+                                        <div class="run-info">
+                                            <h6>Cow Level</h6>
+                                            <p>Experience & Runes</p>
+                                            <div class="run-difficulty">⭐⭐⭐</div>
+                                        </div>
+                                        <div class="run-actions">
+                                            <i class="bi bi-info-circle run-info-icon" data-tooltip="Prerequisites: Wirt's Leg + Tome of Town Portal. Must not have killed Cow King in this difficulty. Great for experience and base items"></i>
+                                            <input type="checkbox" class="run-checkbox" data-run="cows">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="run-card" data-run="leveling" data-category="special">
+                                        <div class="run-icon">📈</div>
+                                        <div class="run-info">
+                                            <h6>Leveling</h6>
+                                            <p>Auto Leveling</p>
+                                            <div class="run-difficulty">⭐</div>
+                                        </div>
+                                        <div class="run-actions">
+                                            <i class="bi bi-info-circle run-info-icon" data-tooltip="Prerequisites: New character (level 1). Bot will automatically level your character through all acts and difficulties"></i>
+                                            <input type="checkbox" class="run-checkbox" data-run="leveling">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="run-card" data-run="terror_zone" data-category="special">
+                                        <div class="run-icon">😱</div>
+                                        <div class="run-info">
+                                            <h6>Terror Zone</h6>
+                                            <p>Dynamic Areas</p>
+                                            <div class="run-difficulty">⭐⭐⭐⭐</div>
+                                        </div>
+                                        <div class="run-actions">
+                                            <i class="bi bi-info-circle run-info-icon" data-tooltip="Prerequisites: Level 71+. Terrorized areas change every hour and provide +2 levels to monsters and better drops"></i>
+                                            <input type="checkbox" class="run-checkbox" data-run="terror_zone">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="run-card" data-run="quests" data-category="special">
+                                        <div class="run-icon">📜</div>
+                                        <div class="run-info">
+                                            <h6>Quests</h6>
+                                            <p>Quest Completion</p>
+                                            <div class="run-difficulty">⭐⭐</div>
+                                        </div>
+                                        <div class="run-actions">
+                                            <i class="bi bi-info-circle run-info-icon" data-tooltip="Prerequisites: Incomplete quests available. Bot will automatically complete available quests for rewards"></i>
+                                            <input type="checkbox" class="run-checkbox" data-run="quests">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="runs-summary">
+                            <div class="summary-info">
+                                <span class="enabled-count">0 runs selected</span>
+                                <label class="randomize-option">
+                                    <input type="checkbox" name="gameRandomizeRuns" {{ if .Config.Game.RandomizeRuns }}checked{{ end }}/>
+                                    Randomize run order
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <input type="hidden" id="gameRuns" name="gameRuns" value="">
                     </div>
                     
                     <div class="form-section">
@@ -801,9 +1225,115 @@ document.querySelectorAll('.step-item').forEach((item, index) => {
 
 // Initialize step navigation
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => showStep(1));
+    document.addEventListener('DOMContentLoaded', () => {
+        showStep(1);
+        initializeRunsInterface();
+    });
 } else {
     showStep(1);
+    initializeRunsInterface();
+}
+
+// Enhanced runs selection functionality
+function initializeRunsInterface() {
+    const runsGrid = document.getElementById('runs-grid');
+    const searchInput = document.getElementById('runs-search');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const enabledCount = document.querySelector('.enabled-count');
+    
+    if (!runsGrid) return;
+    
+    // Search functionality
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            document.querySelectorAll('.run-card').forEach(card => {
+                const runName = card.querySelector('h6').textContent.toLowerCase();
+                const runDesc = card.querySelector('p').textContent.toLowerCase();
+                const matches = runName.includes(searchTerm) || runDesc.includes(searchTerm);
+                card.style.display = matches ? 'flex' : 'none';
+            });
+        });
+    }
+    
+    // Filter functionality
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const filter = this.dataset.filter;
+            document.querySelectorAll('.run-card').forEach(card => {
+                const category = card.dataset.category;
+                const isEnabled = card.classList.contains('enabled');
+                
+                let show = false;
+                if (filter === 'all') show = true;
+                else if (filter === 'enabled') show = isEnabled;
+                else show = category === filter;
+                
+                card.style.display = show ? 'flex' : 'none';
+            });
+        });
+    });
+    
+    // Run card click functionality
+    document.querySelectorAll('.run-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            if (e.target.classList.contains('run-info-icon')) return;
+            
+            const checkbox = this.querySelector('.run-checkbox');
+            checkbox.checked = !checkbox.checked;
+            this.classList.toggle('enabled', checkbox.checked);
+            updateEnabledCount();
+            updateHiddenField();
+        });
+    });
+    
+    // Action buttons
+    const selectAllBtn = document.getElementById('select-all-runs');
+    const clearAllBtn = document.getElementById('clear-all-runs');
+    
+    if (selectAllBtn) {
+        selectAllBtn.addEventListener('click', function() {
+            document.querySelectorAll('.run-checkbox').forEach(checkbox => {
+                checkbox.checked = true;
+                checkbox.closest('.run-card').classList.add('enabled');
+            });
+            updateEnabledCount();
+            updateHiddenField();
+        });
+    }
+    
+    if (clearAllBtn) {
+        clearAllBtn.addEventListener('click', function() {
+            document.querySelectorAll('.run-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+                checkbox.closest('.run-card').classList.remove('enabled');
+            });
+            updateEnabledCount();
+            updateHiddenField();
+        });
+    }
+    
+    function updateEnabledCount() {
+        const count = document.querySelectorAll('.run-checkbox:checked').length;
+        if (enabledCount) {
+            enabledCount.textContent = `${count} run${count !== 1 ? 's' : ''} selected`;
+        }
+    }
+    
+    function updateHiddenField() {
+        const enabledRuns = Array.from(document.querySelectorAll('.run-checkbox:checked'))
+            .map(checkbox => checkbox.dataset.run);
+        const hiddenField = document.getElementById('gameRuns');
+        if (hiddenField) {
+            hiddenField.value = JSON.stringify(enabledRuns);
+        }
+    }
+    
+    updateEnabledCount();
+    updateHiddenField();
 }
 </script>
 </body>

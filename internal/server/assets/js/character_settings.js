@@ -124,6 +124,19 @@ window.onload = function () {
 }
 
 function updateEnabledRunsHiddenField() {
+    // Check if we're using the new card interface
+    const cardInterface = document.getElementById('runs-grid');
+    if (cardInterface) {
+        const enabledRuns = Array.from(document.querySelectorAll('.run-checkbox:checked'))
+            .map(checkbox => checkbox.dataset.run);
+        const hiddenField = document.getElementById('gameRuns');
+        if (hiddenField) {
+            hiddenField.value = JSON.stringify(enabledRuns);
+        }
+        return;
+    }
+    
+    // Fallback to old list interface
     let listItems = document.querySelectorAll('#enabled_runs li');
     let values = Array.from(listItems).map(function (item) {
         return item.getAttribute("value");
@@ -196,6 +209,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initialize step navigation after DOM is loaded
     if (typeof showStep === 'function') {
         showStep(1);
+        initializeRunsInterface();
     }
     
     const schedulerEnabled = document.querySelector('input[name="schedulerEnabled"]');
@@ -385,9 +399,112 @@ document.addEventListener('DOMContentLoaded', function () {
         filterRunewords();
     }
 
-
-	
+    // Initialize runs interface if on step 5
+    initializeRunsInterface();
 });
+
+// Enhanced runs selection functionality
+function initializeRunsInterface() {
+    const runsGrid = document.getElementById('runs-grid');
+    const searchInput = document.getElementById('runs-search');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const enabledCount = document.querySelector('.enabled-count');
+    
+    if (!runsGrid) return;
+    
+    // Search functionality
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            document.querySelectorAll('.run-card').forEach(card => {
+                const runName = card.querySelector('h6').textContent.toLowerCase();
+                const runDesc = card.querySelector('p').textContent.toLowerCase();
+                const matches = runName.includes(searchTerm) || runDesc.includes(searchTerm);
+                card.style.display = matches ? 'flex' : 'none';
+            });
+        });
+    }
+    
+    // Filter functionality
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const filter = this.dataset.filter;
+            document.querySelectorAll('.run-card').forEach(card => {
+                const category = card.dataset.category;
+                const isEnabled = card.classList.contains('enabled');
+                
+                let show = false;
+                if (filter === 'all') show = true;
+                else if (filter === 'enabled') show = isEnabled;
+                else show = category === filter;
+                
+                card.style.display = show ? 'flex' : 'none';
+            });
+        });
+    });
+    
+    // Run card click functionality
+    document.querySelectorAll('.run-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            if (e.target.classList.contains('run-info-icon')) return;
+            
+            const checkbox = this.querySelector('.run-checkbox');
+            checkbox.checked = !checkbox.checked;
+            this.classList.toggle('enabled', checkbox.checked);
+            updateEnabledCount();
+            updateHiddenField();
+        });
+    });
+    
+    // Action buttons
+    const selectAllBtn = document.getElementById('select-all-runs');
+    const clearAllBtn = document.getElementById('clear-all-runs');
+    
+    if (selectAllBtn) {
+        selectAllBtn.addEventListener('click', function() {
+            document.querySelectorAll('.run-checkbox').forEach(checkbox => {
+                checkbox.checked = true;
+                checkbox.closest('.run-card').classList.add('enabled');
+            });
+            updateEnabledCount();
+            updateHiddenField();
+        });
+    }
+    
+    if (clearAllBtn) {
+        clearAllBtn.addEventListener('click', function() {
+            document.querySelectorAll('.run-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+                checkbox.closest('.run-card').classList.remove('enabled');
+            });
+            updateEnabledCount();
+            updateHiddenField();
+        });
+    }
+    
+    function updateEnabledCount() {
+        const count = document.querySelectorAll('.run-checkbox:checked').length;
+        if (enabledCount) {
+            enabledCount.textContent = `${count} run${count !== 1 ? 's' : ''} selected`;
+        }
+    }
+    
+    function updateHiddenField() {
+        const enabledRuns = Array.from(document.querySelectorAll('.run-checkbox:checked'))
+            .map(checkbox => checkbox.dataset.run);
+        const hiddenField = document.getElementById('gameRuns');
+        if (hiddenField) {
+            hiddenField.value = JSON.stringify(enabledRuns);
+        }
+    }
+    
+    // Initialize counts and hidden field
+    updateEnabledCount();
+    updateHiddenField();
+}
 
 function handleBossStaticThresholdChange() {
     const input = document.getElementById('novaBossStaticThreshold');
